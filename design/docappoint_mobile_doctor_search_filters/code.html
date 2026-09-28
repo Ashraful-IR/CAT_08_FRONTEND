@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-fixed": "#00201d", "tertiary-container": "#248279", "surface-container-lowest": "#ffffff", "inverse-surface": "#283044", "tertiary-fixed-dim": "#80d5cb", "error-container": "#ffdad6", "secondary": "#006b5f", "surface-variant": "#dae2fd", "background": "#faf8ff", "on-tertiary": "#ffffff", "surface-container": "#eaedff", "surface-tint": "#006a61", "on-error": "#ffffff", "primary-fixed-dim": "#6bd8cb", "on-surface-variant": "#3d4947", "primary-container": "#008378", "primary": "#00685f", "inverse-primary": "#6bd8cb", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#00504a", "primary-fixed": "#89f5e7", "on-tertiary-container": "#f3fffc", "on-surface": "#131b2e", "outline-variant": "#bcc9c6", "on-background": "#131b2e", "secondary-container": "#6df5e1", "inverse-on-surface": "#eef0ff", "on-secondary-container": "#006f64", "surface-container-low": "#f2f3ff", "on-primary-fixed": "#00201d", "surface-dim": "#d2d9f4", "on-secondary-fixed": "#00201c", "tertiary-fixed": "#9cf2e8", "tertiary": "#006860", "surface-bright": "#faf8ff", "on-error-container": "#93000a", "on-secondary-fixed-variant": "#005048", "secondary-fixed-dim": "#4fdbc8", "surface": "#faf8ff", "secondary-fixed": "#71f8e4", "on-primary-container": "#f4fffc", "error": "#ba1a1a", "surface-container-high": "#e2e7ff", "surface-container-highest": "#dae2fd", "on-primary-fixed-variant": "#005049", "outline": "#6d7a77", "on-primary": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "gutter-mobile": "1rem", "margin": "2rem", "space-sm": "0.5rem", "margin-mobile": "1rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "gutter": "1.5rem" }, fontFamily: { "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "display": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "label-lg": ["Inter"], "body-lg": ["Inter"] }, fontSize: { "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }] } } } };</script><style>@layer base { html, body { min-height: 100%; margin: 0; padding: 0; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } ::-webkit-scrollbar { display: none; }</style><meta content="mobile_tab" name="shell-type"/><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><img alt="Brand logo. - Primary color: #0d9488 - Font: plusJakartaSans - Mode: light - Roundness: rounded-md" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V0be0mGhU3y52OEuUyZ-dolQ5XevGUXMjkGd4LlWLhNv92qV1Yl3xVUVRJMuVF7HcW3kA-gE8BainlZU6L_DPkmrkg0i9zEnp1zANwi0tqJu2WrQVx_3EafJ-4uH5B_jNr7ooDO8Ytt1-Eek5KPYoInxRkzSNVO3d1QsgoQdgBc0bj1KCMm19NuU6RrHo3unAd2RZHX7UelTitimSlK7vYyWIa_LBTMFlvb0OMoHfn-yZJPjLPz5ku"/><span class="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">DocAppoint</span></div><div class="flex items-center gap-space-xs"><button aria-label="Notifications" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[24px]">notifications</span></button><button aria-label="Profile" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida/AEtjO1X2uBQnex1k8PfDNvovGIswEdOLUhUKW-KCzZ3uRAeRupFljnwivQmWof6vvaDbNd0rkhEZSn9NnWIbCkmzjlu-ocMaZnpRsrCzoT5kTBeVD1jZkHRTEBYplUXieOsAr3dS1dm69P8ER7IvHDYOI_U4SD2Hqo7AUFXJy7bSGP9qPEpmvtWVnGQ1SCdc8I_qDavkPm2tOkLTHzDqVVFMWYKBkkWFiH5qsk4zMw95RRSBAgNmf3hBgmcAZw"/></button></div></div></header><main class="flex-1 w-full pt-16 pb-20 bg-surface flex flex-col"><div class="flex flex-col w-full">
+<!-- Search & Location Header Bar -->
+<section class="px-gutter-mobile py-space-sm bg-surface-container-lowest shadow-sm flex flex-col gap-space-xs">
+<!-- Search Field with Clear Button -->
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-3 text-primary text-[20px] pointer-events-none">search</span>
+<input class="w-full h-11 pl-10 pr-10 rounded-full bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:shadow-md transition-all outline-none" id="search-input" placeholder="Doctor, specialty, condition..." type="text" value="Ayesha"/>
+<button aria-label="Clear search" class="absolute right-2.5 w-7 h-7 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface active:scale-95 transition-transform" id="clear-search-btn" onclick="const input = document.getElementById('search-input'); input.value = ''; input.focus();">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Quick Location Badge -->
+<div class="flex items-center justify-between pt-1">
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary font-label-md text-label-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="truncate max-w-[200px]">Boston, MA (15 mi)</span>
+<span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        Accepting New Patients
+      </span>
+</div>
+</section>
+<!-- Active Filters Pill Carousel -->
+<section class="py-space-sm pl-gutter-mobile overflow-x-auto no-scrollbar flex items-center gap-space-xs">
+<!-- Active Pill 1 -->
+<button class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+<span>Cardiology</span>
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<!-- Active Pill 2 -->
+<button class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+<span>This Week</span>
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<!-- Active Pill 3 -->
+<button class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+<span>Rating: 4.5+</span>
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<!-- Clear All -->
+<button class="flex-shrink-0 inline-flex items-center px-3 py-1.5 rounded-full bg-surface-container text-primary font-label-md text-label-md mr-gutter-mobile active:scale-95 transition-transform">
+      Clear All
+    </button>
+</section>
+<!-- Filter & Sort Control Bar -->
+<section class="px-gutter-mobile py-2 flex items-center justify-between">
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">14</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Doctors Available</span>
+</div>
+<div class="flex items-center gap-2">
+<!-- Filter Trigger Button -->
+<button class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface shadow-sm font-label-md text-label-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px] text-primary">tune</span>
+<span>Filters</span>
+<span class="w-4 h-4 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center justify-center leading-none">3</span>
+</button>
+<!-- Sort Trigger Button -->
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface shadow-sm font-label-md text-label-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">swap_vert</span>
+<span class="truncate max-w-[110px]">Fee: Low-High</span>
+</button>
+</div>
+</section>
+<!-- Doctor Card List -->
+<section class="px-gutter-mobile py-space-xs flex flex-col gap-space-sm">
+<!-- Doctor Card 1: Dr. Ayesha Rahman (Top Match) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<!-- Top Badge & Doctor Info -->
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            Top Search Match
+          </span>
+</div>
+<button aria-label="Save Doctor" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+</div>
+<div class="flex items-start gap-space-sm">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm" data-alt="Close up professional portrait of Dr Ayesha Rahman, a south asian female cardiologist in modern clinic attire with stethoscope against a clean teal and white backdrop, soft warm lighting, empathetic smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBnEsvRSwn4FkB9Hu1RHTWWHeAZq_Lg0XrspSOPLBIyqB0dCTFl6Xqdg-Y7LZwMBP7PvQIbYqF7qUZBsj7ERuKXImY06SkktkqmONk-iMQzUAJdUy3QABbtyhFAKta3g_uKPegZnoAAnKAxCpEtlCk8WutZ2ZLEpMTIO2xuH935S9pKZ_U9BUHvCtBrbPeeoXb2SeOd7Cep10JHhDpb25YYYO5cBkr-7_uHsLGgoG5SUDhiE1Vrfo"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-primary ring-2 ring-surface-container-lowest" title="Available today"></span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Dr. Ayesha Rahman</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">MD, FACC • 14 Yrs Exp</p>
+<p class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5 truncate">Cardiology Specialist • Preventive Heart</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center gap-0.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-semibold">4.9</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(148 reviews)</span>
+</div>
+</div>
+</div>
+<!-- Badges & Fee Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">apartment</span>
+            In-Clinic
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">videocam</span>
+            Video
+          </span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fee: </span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">৳1,200</span>
+</div>
+</div>
+<!-- Time Slots Row -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">schedule</span>
+            Today's Available Slots
+          </span>
+<a class="font-label-sm text-label-sm text-primary font-medium hover:underline" href="#">See full calendar</a>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 px-1 rounded-full bg-surface-container text-on-surface font-label-md text-label-md text-center active:bg-primary active:text-on-primary transition-colors">
+            03:30 PM
+          </button>
+<button class="py-2 px-1 rounded-full bg-primary text-on-primary font-label-md text-label-md text-center shadow-sm">
+            04:15 PM
+          </button>
+<button class="py-2 px-1 rounded-full bg-surface-container text-on-surface font-label-md text-label-md text-center active:bg-primary active:text-on-primary transition-colors">
+            05:00 PM
+          </button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 rounded-full bg-surface-container text-on-surface font-label-lg text-label-lg active:scale-95 transition-transform flex items-center justify-center">
+          View Profile
+        </button>
+<button class="h-11 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-sm active:scale-95 transition-transform flex items-center justify-center gap-1">
+<span>Book Visit</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Doctor Card 2: Dr. Tariq Al-Mansoor -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm" data-alt="Professional medical portrait of Dr Tariq Al-Mansoor, male cardiac electrophysiologist in his late thirties wearing glasses and crisp navy blue medical scrub shirt with soft warm indoor clinic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbwiMcp1DkHUtjxnLshOiQc392mFGev-NXx1jXtiqp8gFCnzDrprq6cEgKeTDn-GJ2QXWQE2bQAEUfT7RRcdOwqUFzZzfaunjc3b5JsDFr6YMwVq3XaO78r_gI-I_0-3MPPS6kLon_AiG23t6nyxgzeE9kPk2x-bRPBgOKAU9U8vd-BfUctzaj7ZtW-um_cPt5EwYxYGYKae1tULSVty30Ndrl_WB5D7PWiTUueU7xoU_cUvi2IUk"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Dr. Tariq Al-Mansoor</h2>
+<button aria-label="Save Doctor" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">MD • 8 Yrs Exp</p>
+<p class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5 truncate">Cardiologist • Electrophysiology</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center gap-0.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-semibold">4.7</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(64 reviews)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">videocam</span>
+            Video Available
+          </span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fee: </span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">৳1,150</span>
+</div>
+</div>
+<!-- Next Available Slot Highlight -->
+<div class="flex items-center justify-between px-3 py-2 rounded-xl bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_today</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Next Slot</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Friday, Oct 27 (02:00 PM)</span>
+</div>
+</div>
+<button class="h-9 px-4 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+          Book Visit
+        </button>
+</div>
+</article>
+<!-- Doctor Card 3: Dr. Julian Sterling -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm" data-alt="Doctor Julian Sterling, senior male interventional cardiologist with graying hair and friendly demeanor wearing white lab coat and stethoscope in bright modern hospital corridor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO9lMfe_sm7b9eJXU9JJ2p1pTtuNiIZ6wiAIjbL1aBnLCLHM8hpdHJeFsM5Q4T6UqiJDIRp50V7jKjZvqdVKy_dCgwx9qh3G07GkrOZvyOMNfpgmlIgTd2oFqEbSi19MmND9aqRQH5qtkxmP0fGFtU4E7maRLvcp3yG3zVjHXwz3GzcEadUpN6WbwNdxKndC_t-Dlx9PLJrgR_yxzX8fOjRISpFVRFZ8S5hydP1xeT8hK0o8C2bE8"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Dr. Julian Sterling</h2>
+<button aria-label="Save Doctor" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">MD • 18 Yrs Exp</p>
+<p class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5 truncate">Interventional Cardiology</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center gap-0.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-semibold">4.8</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(92 reviews)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">apartment</span>
+            In-Clinic Only
+          </span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fee: </span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">৳1,350</span>
+</div>
+</div>
+<!-- Next Available Slot Highlight -->
+<div class="flex items-center justify-between px-3 py-2 rounded-xl bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">event_available</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Next Slot</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Tomorrow at 09:00 AM</span>
+</div>
+</div>
+<button class="h-9 px-4 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+          Book Visit
+        </button>
+</div>
+</article>
+<!-- Doctor Card 4: Dr. Sophia Chen -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm" data-alt="Doctor Sophia Chen, asian female cardiovascular disease specialist smiling warmly in contemporary clinical office setting with clean ambient lighting and stethoscope around neck" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRMKL5-ytJnIdopL86VJcANNb4k3o2IyJyfXnA-_BmJkke5DEf6bk5ebVF-YqQZqj_hl6oAioSAvmvsZvRwta8z_ZotI-e1fzC846-GPWEFJ4fequDC5NMSj_XOGhdCW4I3-UEOTFfrGiwTCrmg2y_dcPsvWip6Y0CMqO5YvDIO5L7MAAHejhJvVTSVgLcbJOVrJ3dkzPW7EOnp1eGPstGmA8V-z1ec_8CnUo7raVidSeMLJOL154"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Dr. Sophia Chen</h2>
+<button aria-label="Save Doctor" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">MD • 11 Yrs Exp</p>
+<p class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5 truncate">Cardiovascular Disease</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center gap-0.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-semibold">4.95</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(230 reviews)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+            Highly Rated
+          </span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fee: </span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">৳1,500</span>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-1">
+<button class="w-full h-11 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-sm active:scale-95 transition-transform flex items-center justify-center gap-1">
+<span>Book Visit</span>
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</button>
+</div>
+</article>
+</section>
+<!-- Pagination / Load More Section -->
+<section class="px-gutter-mobile py-space-md flex flex-col items-center gap-space-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant">
+      Showing 1-4 of 14 doctors
+    </p>
+<div class="w-48 h-1.5 rounded-full bg-surface-container overflow-hidden">
+<div class="w-[28%] h-full bg-primary rounded-full"></div>
+</div>
+<button class="mt-2 w-full h-11 rounded-full bg-surface-container text-on-surface font-label-lg text-label-lg active:scale-95 transition-transform flex items-center justify-center gap-1.5">
+<span>Load More Doctors</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</section>
+<!-- Emergency Notice Disclaimer -->
+<section class="mx-gutter-mobile mb-space-md p-space-md rounded-xl bg-error-container text-on-error-container flex items-start gap-3">
+<span class="material-symbols-outlined text-error text-[22px] flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg font-bold text-on-error-container">Medical Emergency Notice</span>
+<p class="font-body-sm text-body-sm text-on-error-container opacity-90 mt-0.5">
+        If you or someone else is experiencing severe chest pain, shortness of breath, or immediate life-threatening symptoms, please call <strong>999</strong> or visit the nearest emergency room immediately.
+      </p>
+</div>
+</section>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-semibold"><div class="h-16 px-space-sm flex items-center justify-around"><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 transition-colors text-primary font-semibold" data-path="doctors" href="#"><span class="material-symbols-outlined text-[24px]">stethoscope</span><span class="font-label-sm text-label-sm mt-0.5">Doctors</span></a><a class="relative flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="appointments" href="#"><div class="relative flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">calendar_month</span><span class="absolute -top-0.5 -right-1.5 w-2 h-2 rounded-full bg-primary ring-2 ring-surface"></span></div><span class="font-label-sm text-label-sm mt-0.5">Appointments</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm mt-0.5">Profile</span></a></div></nav></body></html>
