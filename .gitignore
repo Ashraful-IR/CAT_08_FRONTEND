@@ -1,0 +1,30 @@
+# Agent / tooling files
+.claude/
+.freebuff/
+AGENTS.md
+CLAUDE.md
+
+# Design & docs
+design/
+docs/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Test & coverage
+coverage/
+playwright-report/
+test-results/
+
+# Misc
+.DS_Store
+*.log
