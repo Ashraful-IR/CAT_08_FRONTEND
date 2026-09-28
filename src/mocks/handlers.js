@@ -2,9 +2,10 @@ import { http, HttpResponse } from "msw";
 import { doctorFixtures, topRatedFixtures } from "./fixtures";
 
 /**
- * MSW handlers mirroring docs/API_CONTRACT.md — Doctors (public) section only.
- * Auth/appointment/review handlers are added with their roadmap tasks;
- * each must cover success + every documented error status with { message }.
+ * MSW handlers mirroring docs/API_CONTRACT.md.
+ * Doctors (public) + Auth/session sections. Each handler covers success +
+ * documented error statuses with { message }. Tests override per-case with
+ * server.use(...).
  */
 
 export const handlers = [
@@ -20,4 +21,10 @@ export const handlers = [
     }
     return HttpResponse.json(doctor);
   }),
+
+  // Session: default signed-out so page tests are deterministic.
+  // Sign-in flows override with 200 { user } via server.use(...).
+  http.get("/api/auth/session", () =>
+    HttpResponse.json({ message: "Unauthorized" }, { status: 401 }),
+  ),
 ];
