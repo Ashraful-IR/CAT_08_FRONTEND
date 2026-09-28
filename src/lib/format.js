@@ -19,3 +19,14 @@ export function formatRating(rating) {
     maximumFractionDigits: 1,
   }).format(rating);
 }
+
+/**
+ * Renders a date as YYYY-MM-DD (DECISIONS D-006). Slices the ISO string
+ * instead of using toLocaleDateString so the displayed calendar day is the
+ * backend's own day, immune to the viewer's timezone.
+ *
+ * @param {string} isoDate - ISO timestamp or plain YYYY-MM-DD
+ */
+export function formatDate(isoDate) {
+  return isoDate.slice(0, 10);
+}

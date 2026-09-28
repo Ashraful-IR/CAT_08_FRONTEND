@@ -1,5 +1,5 @@
 import { serverFetch } from "@/lib/api/server";
-import { parseDoctor, parseDoctors } from "@/lib/api/types";
+import { parseDoctor, parseDoctors, parseReviews } from "@/lib/api/types";
 
 /**
  * Server-side doctors data (public endpoints, see API_CONTRACT).
@@ -25,4 +25,11 @@ export function getDoctor(id) {
   return serverFetch(`/api/doctors/${encodeURIComponent(id)}`, { tags: ["doctors"] }).then(
     (data) => parseDoctor(data),
   );
+}
+
+/** GET /reviews/:doctorId — public review list for one doctor. */
+export function getReviews(doctorId) {
+  return serverFetch(`/api/reviews/${encodeURIComponent(doctorId)}`, {
+    tags: ["reviews"],
+  }).then((data) => parseReviews(data));
 }

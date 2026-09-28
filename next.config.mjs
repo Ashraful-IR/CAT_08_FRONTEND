@@ -5,8 +5,11 @@ const nextConfig = {
   reactStrictMode: true,
 
   images: {
-    // Doctor avatar hosts seen in the seed data (DECISIONS D-001 / task 2.2).
-    remotePatterns: [{ protocol: "https", hostname: "i.ibb.co" }],
+    // Doctor avatars come from i.ibb.co (seed data, DECISIONS D-001), but
+    // review authors' photoURL is user-provided at sign-up and can be any
+    // https host — so the allow-list is intentionally broad (DECISIONS → Log,
+    // task 3.1).
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 
   // Same-origin API proxy: the browser never talks to the backend directly.
