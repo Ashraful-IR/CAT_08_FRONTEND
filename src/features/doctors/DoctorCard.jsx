@@ -53,14 +53,15 @@ export function DoctorCard({ doctor }) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-headline-sm text-on-surface">
+          {/* h2: directly under the section h1/h2 in every usage context. */}
+          <h2 className="truncate text-headline-sm text-on-surface">
             <Link
               href={`/doctors/${doctor._id}`}
-              className="outline-none after:absolute after:inset-0 focus-visible:ring-3 focus-visible:ring-ring/50 after:rounded-2xl"
+              className="outline-none after:absolute after:inset-0 after:rounded-2xl focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {doctor.name}
             </Link>
-          </h3>
+          </h2>
           <p className="text-label-sm font-semibold text-primary">
             {doctor.specialty}
           </p>

@@ -10,11 +10,11 @@
 
 /**
  * @param {Array<import("@/lib/api/types").Doctor>} doctors
- * @param {{ q?: string, specialty?: string, minFee?: number, maxFee?: number, sort?: "rating"|"fee_asc"|"fee_desc"|"name" }} filters
+ * @param {{ q?: string, specialty?: string|string[], minFee?: number, maxFee?: number, minRating?: number, sort?: "rating"|"fee_asc"|"fee_desc"|"name" }} filters
  * @returns {Array<import("@/lib/api/types").Doctor>}
  */
 export function filterDoctors(doctors, filters = {}) {
-  const { q, specialty, minFee, maxFee, sort } = filters;
+  const { q, specialty, minFee, maxFee, minRating, sort } = filters;
 
   let result = doctors;
 
@@ -30,8 +30,13 @@ export function filterDoctors(doctors, filters = {}) {
     }
   }
 
-  if (specialty && specialty !== "all") {
-    result = result.filter((doctor) => doctor.specialty === specialty);
+  if (specialty) {
+    // A single string (hero quick-filter) or an array (sidebar checkboxes);
+    // "all" always means no filter.
+    const selected = Array.isArray(specialty) ? specialty : [specialty];
+    if (!selected.includes("all")) {
+      result = result.filter((doctor) => selected.includes(doctor.specialty));
+    }
   }
 
   if (typeof minFee === "number" && !Number.isNaN(minFee)) {
@@ -40,6 +45,10 @@ export function filterDoctors(doctors, filters = {}) {
 
   if (typeof maxFee === "number" && !Number.isNaN(maxFee)) {
     result = result.filter((doctor) => doctor.fee <= maxFee);
+  }
+
+  if (typeof minRating === "number" && !Number.isNaN(minRating)) {
+    result = result.filter((doctor) => doctor.rating >= minRating);
   }
 
   if (sort) {

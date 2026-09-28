@@ -49,6 +49,31 @@ describe("filterDoctors", () => {
     });
     expect(result).toHaveLength(1);
   });
+
+  it("filters by multiple selected specialties", () => {
+    const result = filterDoctors(doctorFixtures, {
+      specialty: ["Cardiologist", "Pediatrician"],
+    });
+    expect(result).toHaveLength(2);
+    expect(result.map((d) => d.specialty).sort()).toEqual([
+      "Cardiologist",
+      "Pediatrician",
+    ]);
+  });
+
+  it("treats an 'all' entry in a specialty list as no filter", () => {
+    expect(filterDoctors(doctorFixtures, { specialty: ["all"] })).toHaveLength(
+      doctorFixtures.length,
+    );
+  });
+
+  it("filters by minimum rating inclusively", () => {
+    const result = filterDoctors(doctorFixtures, { minRating: 4.8 });
+    expect(result).toHaveLength(3);
+    for (const doctor of result) {
+      expect(doctor.rating).toBeGreaterThanOrEqual(4.8);
+    }
+  });
 });
 
 describe("sortDoctors", () => {
