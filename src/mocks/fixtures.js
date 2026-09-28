@@ -55,3 +55,21 @@ export const doctorFixtures = [
 export const topRatedFixtures = [...doctorFixtures]
   .sort((a, b) => b.rating - a.rating)
   .slice(0, 3);
+
+/** Shape per API_CONTRACT → User. */
+export const userFixture = {
+  id: "u-123",
+  name: "Rifat Hossain",
+  email: "rifat@example.com",
+  photoURL: "https://i.ibb.co/avatar-rifat.jpg",
+};
+
+/** Response body of POST /auth/sign-in/email (token is ignored by the frontend). */
+export const signInResponseFixture = {
+  message: "Sign-in successful",
+  token: "mock.jwt.token",
+  user: userFixture,
+};
+
+/** Response body of GET /auth/session. */
+export const sessionResponseFixture = { user: userFixture };
