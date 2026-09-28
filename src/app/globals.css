@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens land here in roadmap task 0.3 (docs/DESIGN_SYSTEM.md).
+   Placeholder palette until then — do not hard-code these in components. */
+:root {
+  --background: #faf8ff;
+  --foreground: #1c1b22;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}

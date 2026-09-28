@@ -1,0 +1,6 @@
+packages:
+  - "."
+
+# pnpm 12 build-script allow-list (unrs-resolver is a helper used by eslint-config-next)
+allowBuilds:
+  unrs-resolver: true
