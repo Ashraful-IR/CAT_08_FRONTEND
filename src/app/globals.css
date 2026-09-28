@@ -1,15 +1,271 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Design tokens land here in roadmap task 0.3 (docs/DESIGN_SYSTEM.md).
-   Placeholder palette until then — do not hard-code these in components. */
-:root {
-  --background: #faf8ff;
-  --foreground: #1c1b22;
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Clinical Clarity design tokens (docs/DESIGN_SYSTEM.md).
+ * Source of truth: design/<screen>/screen.png YAML palette (DECISIONS D-004 —
+ * prose hexes used only for tokens the YAML lacks: success/warning/critical).
+ * Never hard-code these values in components — use the generated utilities
+ * (bg-primary, text-on-surface-variant, shadow-level-1, text-headline-md…).
+ */
+
+@theme inline {
+    --font-heading: var(--font-heading);
+    --font-sans: var(--font-sans);
+
+    /* shadcn semantic tokens */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* Clinical Clarity palette — surfaces */
+    --color-surface: var(--surface);
+    --color-surface-dim: var(--surface-dim);
+    --color-surface-bright: var(--surface-bright);
+    --color-surface-container-lowest: var(--surface-container-lowest);
+    --color-surface-container-low: var(--surface-container-low);
+    --color-surface-container: var(--surface-container);
+    --color-surface-container-high: var(--surface-container-high);
+    --color-surface-container-highest: var(--surface-container-highest);
+    --color-surface-variant: var(--surface-variant);
+    --color-on-surface: var(--on-surface);
+    --color-on-surface-variant: var(--on-surface-variant);
+    --color-inverse-surface: var(--inverse-surface);
+    --color-inverse-on-surface: var(--inverse-on-surface);
+
+    /* Clinical Clarity palette — outlines */
+    --color-outline: var(--outline);
+    --color-outline-variant: var(--outline-variant);
+
+    /* Clinical Clarity palette — primary family */
+    --color-primary-container: var(--primary-container);
+    --color-on-primary-container: var(--on-primary-container);
+    --color-primary-fixed: var(--primary-fixed);
+    --color-primary-fixed-dim: var(--primary-fixed-dim);
+    --color-on-primary-fixed: var(--on-primary-fixed);
+    --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+    --color-inverse-primary: var(--inverse-primary);
+
+    /* Clinical Clarity palette — secondary/tertiary containers */
+    --color-secondary-container: var(--secondary-container);
+    --color-on-secondary-container: var(--on-secondary-container);
+    --color-tertiary-container: var(--tertiary-container);
+    --color-on-tertiary-container: var(--on-tertiary-container);
+
+    /* Clinical Clarity palette — error + system feedback (prose-only tokens) */
+    --color-error: var(--error);
+    --color-on-error: var(--on-error);
+    --color-error-container: var(--error-container);
+    --color-on-error-container: var(--on-error-container);
+    --color-success: var(--success);
+    --color-on-success-container: var(--on-success-container);
+    --color-success-container: var(--success-container);
+    --color-warning: var(--warning);
+    --color-warning-container: var(--warning-container);
+    --color-critical: var(--critical);
+    --color-critical-container: var(--critical-container);
+
+    /* Elevation (DESIGN.md → "Elevation & Depth") — no heavy drop shadows */
+    --shadow-level-1: 0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.02);
+    --shadow-level-2: 0 4px 6px -1px rgb(13 148 136 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+    --shadow-level-3: 0 10px 15px -3px rgb(15 23 42 / 0.06), 0 4px 6px -4px rgb(15 23 42 / 0.03);
+    --shadow-level-4: 0 20px 25px -5px rgb(15 23 42 / 0.08), 0 8px 10px -6px rgb(15 23 42 / 0.03);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
+:root {
+    /* shadcn semantic tokens mapped to Clinical Clarity (DESIGN_SYSTEM → Setup tasks) */
+    --background: #faf8ff; /* surface */
+    --foreground: #131b2e; /* on-surface */
+    --card: #ffffff; /* surface-container-lowest */
+    --card-foreground: #131b2e;
+    --popover: #ffffff;
+    --popover-foreground: #131b2e;
+    --primary: #00685f;
+    --primary-foreground: #ffffff; /* on-primary */
+    --secondary: #e2e7ff; /* surface-container-high */
+    --secondary-foreground: #131b2e;
+    --muted: #f2f3ff; /* surface-container-low */
+    --muted-foreground: #3d4947; /* on-surface-variant */
+    --accent: #eaedff; /* surface-container */
+    --accent-foreground: #131b2e;
+    --destructive: #ba1a1a; /* error */
+    --border: #bcc9c6; /* outline-variant */
+    --input: #bcc9c6;
+    --ring: #00685f; /* primary */
+    --radius: 0.5rem;
+
+    /* Clinical Clarity surfaces */
+    --surface: #faf8ff;
+    --surface-dim: #d2d9f4;
+    --surface-bright: #faf8ff;
+    --surface-container-lowest: #ffffff;
+    --surface-container-low: #f2f3ff;
+    --surface-container: #eaedff;
+    --surface-container-high: #e2e7ff;
+    --surface-container-highest: #dae2fd;
+    --surface-variant: #dae2fd;
+    --on-surface: #131b2e;
+    --on-surface-variant: #3d4947;
+    --inverse-surface: #283044;
+    --inverse-on-surface: #eef0ff;
+
+    /* Outlines */
+    --outline: #6d7a77;
+    --outline-variant: #bcc9c6;
+
+    /* Primary family */
+    --primary-container: #008378;
+    --on-primary-container: #f4fffc;
+    --primary-fixed: #89f5e7;
+    --primary-fixed-dim: #6bd8cb;
+    --on-primary-fixed: #00201d;
+    --on-primary-fixed-variant: #005049;
+    --inverse-primary: #6bd8cb;
+
+    /* Secondary / tertiary containers */
+    --secondary-container: #6df5e1;
+    --on-secondary-container: #006f64;
+    --tertiary-container: #248279;
+    --on-tertiary-container: #f3fffc;
+
+    /* Error + system feedback (success/warning/critical: prose-only tokens) */
+    --error: #ba1a1a;
+    --on-error: #ffffff;
+    --error-container: #ffdad6;
+    --on-error-container: #93000a;
+    --success: #10b981;
+    --success-container: #ecfdf5;
+    --on-success-container: #047857;
+    --warning: #f59e0b;
+    --warning-container: #fffbeb;
+    --critical: #ef4444;
+    --critical-container: #fef2f2;
+}
+
+/*
+ * Typography scale (DESIGN_SYSTEM → Typography). Mobile-first: display and
+ * headline-lg use their -mobile values below 768px. Headings use Plus Jakarta
+ * Sans (font-heading); body/labels use Inter (font-sans).
+ */
+@utility text-display {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2rem; /* 32/40 mobile */
+    line-height: 2.5rem;
+    letter-spacing: -0.015em;
+    @media (width >= 48rem) {
+        font-size: 2.5rem; /* 40/48 desktop */
+        line-height: 3rem;
+        letter-spacing: -0.02em;
+    }
+}
+
+@utility text-headline-lg {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.5rem; /* 24/32 mobile */
+    line-height: 2rem;
+    letter-spacing: -0.01em;
+    @media (width >= 48rem) {
+        font-size: 1.875rem; /* 30/38 desktop */
+        line-height: 2.375rem;
+        letter-spacing: -0.015em;
+    }
+}
+
+@utility text-headline-md {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.375rem; /* 22/28 */
+    line-height: 1.75rem;
+    letter-spacing: -0.01em;
+}
+
+@utility text-headline-sm {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.125rem; /* 18/24 */
+    line-height: 1.5rem;
+}
+
+@utility text-body-lg {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1.125rem; /* 18/28 */
+    line-height: 1.75rem;
+}
+
+@utility text-body-md {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1rem; /* 16/24 */
+    line-height: 1.5rem;
+}
+
+@utility text-body-sm {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.875rem; /* 14/20 */
+    line-height: 1.25rem;
+}
+
+@utility text-label-lg {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.875rem; /* 14/20 */
+    line-height: 1.25rem;
+    letter-spacing: 0.01em;
+}
+
+@utility text-label-md {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem; /* 12/16 */
+    line-height: 1rem;
+    letter-spacing: 0.02em;
+}
+
+@utility text-label-sm {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.6875rem; /* 11/14 */
+    line-height: 0.875rem;
+    letter-spacing: 0.04em;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
 }

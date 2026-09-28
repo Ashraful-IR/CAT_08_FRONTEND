@@ -1,7 +1,11 @@
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
 
 export const metadata = {
   title: {
@@ -14,10 +18,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jakarta.variable}`}
+    >
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }
