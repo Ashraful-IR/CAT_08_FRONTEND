@@ -1,6 +1,8 @@
 packages:
   - "."
 
-# pnpm 12 build-script allow-list (unrs-resolver is a helper used by eslint-config-next)
+# pnpm 12 build-script allow-list (unrs-resolver is a helper used by eslint-config-next;
+# msw runs its `msw init` postinstall for browser service-worker mocking)
 allowBuilds:
   unrs-resolver: true
+  msw: true
