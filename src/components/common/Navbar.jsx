@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Logo } from "./Logo";
+import { UserMenu } from "./UserMenu";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/hooks";
 
@@ -73,29 +74,7 @@ export function Navbar() {
               className="h-9 w-24 rounded-full bg-surface-container-high animate-pulse"
             />
           ) : user ? (
-            <Link href="/profile" className="flex items-center gap-3 pl-2 min-w-0">
-              {/* Remote photos need remotePatterns (task 2.2); initials avatar for now */}
-              <span
-                aria-hidden
-                className="flex size-8 items-center justify-center rounded-full bg-primary-container text-on-primary-container text-label-md font-semibold"
-              >
-                {user.name
-                  .split(" ")
-                  .map((part) => part[0])
-                  .filter(Boolean)
-                  .slice(0, 2)
-                  .join("")
-                  .toUpperCase()}
-              </span>
-              <span className="hidden sm:flex flex-col text-left min-w-0">
-                <span className="text-label-lg text-on-surface leading-tight truncate">
-                  {user.name}
-                </span>
-                <span className="text-label-sm text-on-surface-variant leading-tight">
-                  Patient
-                </span>
-              </span>
-            </Link>
+            <UserMenu user={user} />
           ) : (
             <div className="flex items-center gap-2">
               <Button asChild variant="ghost" size="sm">

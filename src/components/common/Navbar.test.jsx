@@ -1,9 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
+import { vi } from "vitest";
 import { Navbar } from "./Navbar";
 import { server } from "@/mocks/node";
 import { sessionResponseFixture } from "@/mocks/fixtures";
+
+// UserMenu's sign-out hook uses useRouter; provide a stub router.
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+  usePathname: () => "/",
+}));
 
 function renderWithProviders(ui) {
   const queryClient = new QueryClient({
