@@ -56,6 +56,84 @@ export const topRatedFixtures = [...doctorFixtures]
   .sort((a, b) => b.rating - a.rating)
   .slice(0, 3);
 
+/** Shape per API_CONTRACT → Review (for Dr. Fatema Begum, doctor 768). */
+export const reviewFixtures = [
+  {
+    _id: "6a51ea90108e8a8b1cab0001",
+    doctorId: "6a51ea90108e8a8b1caaf768",
+    appointmentId: "6a51ea90108e8a8b1cab1001",
+    rating: 5,
+    comment: "Very caring and thorough. Everything was explained clearly.",
+    userEmail: "patient1@example.com",
+    userName: "Tania Akter",
+    userPhotoURL: "https://i.ibb.co/patient-tania.jpg",
+    createdAt: "2026-09-20T10:00:00.000Z",
+  },
+  {
+    _id: "6a51ea90108e8a8b1cab0002",
+    doctorId: "6a51ea90108e8a8b1caaf768",
+    appointmentId: "6a51ea90108e8a8b1cab1002",
+    rating: 4,
+    comment: "Great consultation, slightly long wait time.",
+    userEmail: "patient2@example.com",
+    userName: "Rahim Mia",
+    userPhotoURL: "",
+    createdAt: "2026-09-22T15:30:00.000Z",
+  },
+];
+
+/**
+ * Public appointment list (GET /appointments) — B-001: client code may only
+ * use doctorId + date + time (to grey out booked slots), never display it.
+ * The endpoint returns full Appointment objects (contract), so the fixtures
+ * mirror that shape; dates are future-relative to the frozen test clock
+ * (2026-09-28).
+ */
+export const publicAppointmentFixtures = [
+  {
+    _id: "6a51ea90108e8a8b1cab2001",
+    userEmail: "patient1@example.com",
+    doctorId: "6a51ea90108e8a8b1caaf768",
+    doctorName: "Dr. Fatema Begum",
+    fee: 1300,
+    rating: 4.9,
+    patientName: "Tania Akter",
+    gender: "Female",
+    phone: "01710000001",
+    appointmentDate: "2026-09-30",
+    appointmentTime: "11:00 AM",
+    createdAt: "2026-09-27T09:00:00.000Z",
+  },
+  {
+    _id: "6a51ea90108e8a8b1cab2002",
+    userEmail: "patient2@example.com",
+    doctorId: "6a51ea90108e8a8b1caaf768",
+    doctorName: "Dr. Fatema Begum",
+    fee: 1300,
+    rating: 4.9,
+    patientName: "Rahim Mia",
+    gender: "Male",
+    phone: "01710000002",
+    appointmentDate: "2026-09-30",
+    appointmentTime: "02:00 PM",
+    createdAt: "2026-09-27T10:00:00.000Z",
+  },
+  {
+    _id: "6a51ea90108e8a8b1cab2003",
+    userEmail: "patient3@example.com",
+    doctorId: "6a51ea90108e8a8b1caaf764",
+    doctorName: "Dr. Ayesha Rahman",
+    fee: 1500,
+    rating: 4.9,
+    patientName: "Kamal Hossain",
+    gender: "Male",
+    phone: "01710000003",
+    appointmentDate: "2026-09-30",
+    appointmentTime: "10:00 AM",
+    createdAt: "2026-09-27T11:00:00.000Z",
+  },
+];
+
 /** Shape per API_CONTRACT → User. */
 export const userFixture = {
   id: "u-123",

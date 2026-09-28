@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BadgeCheck, CalendarDays, Star } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Star } from "lucide-react";
 import { ApiError } from "@/lib/api/errors";
 import { formatBDT, formatRating } from "@/lib/format";
 import { getDoctor, getReviews } from "@/features/doctors/api";
 import { ReviewList } from "@/features/doctors/ReviewList";
+import { BookingFlow } from "@/features/doctors/BookingFlow";
 
 /**
  * @param {{ params: Promise<{ id: string }> }} props
@@ -125,26 +126,7 @@ export default async function DoctorProfilePage({ params }) {
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:col-span-5 xl:col-span-4">
-          <div className="rounded-2xl bg-surface-container-lowest p-space-lg shadow-level-1">
-            <h2 className="text-headline-sm text-on-surface">
-              Book a consultation
-            </h2>
-            <p className="mt-1 text-body-sm text-on-surface-variant">
-              {doctor.specialty} · {doctor.name}
-            </p>
-            <div className="mt-space-md flex items-center justify-between rounded-xl bg-surface-container-low p-space-md">
-              <span className="text-label-md text-on-surface-variant">
-                Consultation Fee
-              </span>
-              <span className="text-headline-sm font-bold text-primary tabular-nums">
-                {formatBDT(doctor.fee)}
-              </span>
-            </div>
-            <p className="mt-space-md flex items-center gap-2 text-label-md text-on-surface-variant">
-              <CalendarDays aria-hidden="true" className="size-4 text-primary" />
-              Pick a date and time to see this doctor.
-            </p>
-          </div>
+          <BookingFlow doctor={doctor} />
         </aside>
       </div>
     </div>

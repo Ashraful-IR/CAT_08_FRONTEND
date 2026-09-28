@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { vi } from "vitest";
@@ -34,9 +35,19 @@ beforeEach(() => {
   );
 });
 
+// BookingFlow (client) uses TanStack Query; provide a fresh client per test.
+function renderPage(ui) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+}
+
 describe("doctor profile page", () => {
   it("renders name, specialty, fee, rating, and description", async () => {
-    render(await ProfilePage({ params: Promise.resolve({ id: doctor._id }) }));
+    renderPage(await ProfilePage({ params: Promise.resolve({ id: doctor._id }) }));
 
     expect(
       screen.getByRole("heading", { level: 1, name: doctor.name }),
@@ -48,7 +59,7 @@ describe("doctor profile page", () => {
   });
 
   it("renders the doctor's reviews", async () => {
-    render(await ProfilePage({ params: Promise.resolve({ id: doctor._id }) }));
+    renderPage(await ProfilePage({ params: Promise.resolve({ id: doctor._id }) }));
 
     expect(
       screen.getByRole("heading", { name: /reviews/i }),
@@ -78,7 +89,7 @@ describe("doctor profile page", () => {
   });
 
   it("has no axe accessibility violations", async () => {
-    const { container } = render(
+    const { container } = renderPage(
       await ProfilePage({ params: Promise.resolve({ id: doctor._id }) }),
     );
     expect(await axe(container)).toHaveNoViolations();
