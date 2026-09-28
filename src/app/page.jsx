@@ -1,10 +1,23 @@
-export default function HomePage() {
+import { HeroSection } from "@/features/doctors/HeroSection";
+import { TopRatedSection } from "@/features/doctors/TopRatedSection";
+import { getDoctors, getTopRated } from "@/features/doctors/api";
+import { specialtiesOf } from "@/features/doctors/filters";
+
+/**
+ * Home (design → docappoint_home_doctor_discovery). Server Component: both
+ * sections' data is fetched on the server; the hero only ships its client
+ * search card. Public data — no auth involved (DECISIONS D-010).
+ */
+export default async function HomePage() {
+  const [doctors, topRated] = await Promise.all([
+    getDoctors(),
+    getTopRated(),
+  ]);
+
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
-      <h1 className="text-3xl font-bold">DocAppoint</h1>
-      <p className="mt-2 text-gray-600">
-        Scaffold OK — Task 0.1. Design implementation starts in Phase 2.
-      </p>
-    </main>
+    <>
+      <HeroSection specialties={specialtiesOf(doctors)} />
+      <TopRatedSection doctors={topRated} />
+    </>
   );
 }

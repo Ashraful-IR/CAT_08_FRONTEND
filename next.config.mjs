@@ -4,6 +4,11 @@ const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:5001";
 const nextConfig = {
   reactStrictMode: true,
 
+  images: {
+    // Doctor avatar hosts seen in the seed data (DECISIONS D-001 / task 2.2).
+    remotePatterns: [{ protocol: "https", hostname: "i.ibb.co" }],
+  },
+
   // Same-origin API proxy: the browser never talks to the backend directly.
   // Keeps the httpOnly auth cookie first-party and avoids CORS entirely.
   async rewrites() {
