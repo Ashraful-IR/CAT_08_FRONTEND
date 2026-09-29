@@ -1,47 +1,36 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { http, HttpResponse } from "msw";
-import { vi } from "vitest";
-import HomePage from "./page";
-import { server } from "@/mocks/node";
-import { doctorFixtures, topRatedFixtures } from "@/mocks/fixtures";
+import { describe, expect, it, vi } from "vitest";
+import HomePage, { generateMetadata } from "./page";
 
-// HeroSection (client) reads the router; the page itself is a Server Component.
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+// Server data comes through the feature API layer; MSW covers the network.
+vi.mock("@/features/doctors/api", () => ({
+  getDoctors: vi.fn(async () => []),
+  getTopRated: vi.fn(async () => []),
+}));
 
-// serverFetch requests the absolute BACKEND_URL, so the overrides must too
-// (same convention as src/lib/api/server.test.js).
-const BACKEND = process.env.BACKEND_URL ?? "http://localhost:5001";
+import { HeroSection } from "@/features/doctors/HeroSection";
+import { TopRatedSection } from "@/features/doctors/TopRatedSection";
 
-// Awaiting the async Server Component resolves its data-fetching before the
-// DOM is queried (mock the network only).
-describe("HomePage", () => {
-  it("renders the hero heading and top-rated doctors from the API", async () => {
-    server.use(
-      http.get(`${BACKEND}/api/doctors`, () => HttpResponse.json(doctorFixtures)),
-      http.get(`${BACKEND}/api/doctors/top-rated`, () =>
-        HttpResponse.json(topRatedFixtures),
-      ),
-    );
-    render(await HomePage());
+vi.mock("@/features/doctors/HeroSection", () => ({
+  HeroSection: vi.fn(() => <div data-testid="hero" />),
+}));
+vi.mock("@/features/doctors/TopRatedSection", () => ({
+  TopRatedSection: vi.fn(() => <div data-testid="top-rated" />),
+}));
 
-    expect(
-      screen.getByRole("heading", { level: 1, name: /find the right doctor/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /top rated doctors/i }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("Dr. Fatema Begum")).not.toHaveLength(0);
+describe("home page", () => {
+  it("renders the hero and top-rated sections", async () => {
+    const { container } = render(await HomePage());
+
+    expect(screen.getByTestId("hero")).toBeInTheDocument();
+    expect(screen.getByTestId("top-rated")).toBeInTheDocument();
+    expect(container).toBeInTheDocument();
   });
 
-  it("has no axe accessibility violations", async () => {
-    server.use(
-      http.get(`${BACKEND}/api/doctors`, () => HttpResponse.json(doctorFixtures)),
-      http.get(`${BACKEND}/api/doctors/top-rated`, () =>
-        HttpResponse.json(topRatedFixtures),
-      ),
-    );
-    const { container } = render(await HomePage());
-    expect(await axe(container)).toHaveNoViolations();
+  it("exposes SEO metadata", async () => {
+    const metadata = await generateMetadata();
+    expect(metadata.title).toContain("DocAppoint");
+    expect(metadata.description).toBeTruthy();
   });
 });

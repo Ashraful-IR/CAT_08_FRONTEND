@@ -8,6 +8,13 @@ import { specialtiesOf } from "@/features/doctors/filters";
  * sections' data is fetched on the server; the hero only ships its client
  * search card. Public data — no auth involved (DECISIONS D-010).
  */
+export async function generateMetadata() {
+  return {
+    title: "DocAppoint — Book your doctor",
+    description:
+      "Discover doctors, view profiles and reviews, and book an appointment in minutes.",
+  };
+}
 export default async function HomePage() {
   const [doctors, topRated] = await Promise.all([
     getDoctors(),
