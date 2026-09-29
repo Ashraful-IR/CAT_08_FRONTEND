@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getMyAppointments, rescheduleAppointment } from "./api";
+import {
+  cancelAppointment,
+  getMyAppointments,
+  rescheduleAppointment,
+} from "./api";
 
 /** Centralised query keys for the appointments feature (ARCHITECTURE). */
 export const appointmentKeys = {
@@ -38,6 +42,25 @@ export function useRescheduleAppointment() {
         ),
       );
       // The slot the visit vacated frees up for other visitors.
+      queryClient.invalidateQueries({ queryKey: ["public-appointments"] });
+    },
+  });
+}
+
+/**
+ * DELETE /appointments/:id (task 4.3). Removes the booking from the
+ * ['appointments','mine'] cache so the card disappears without a refetch;
+ * also refreshes the public list (the slot becomes bookable again).
+ */
+export function useCancelAppointment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: cancelAppointment,
+    onSuccess: (_result, cancelledId) => {
+      queryClient.setQueryData(appointmentKeys.mine, (current) =>
+        (current ?? []).filter((appointment) => appointment._id !== cancelledId),
+      );
       queryClient.invalidateQueries({ queryKey: ["public-appointments"] });
     },
   });

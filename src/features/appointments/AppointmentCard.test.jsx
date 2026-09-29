@@ -96,6 +96,22 @@ describe("AppointmentCard — upcoming", () => {
     ).toBeInTheDocument();
   });
 
+  it("offers cancellation with a confirmation step", async () => {
+    const user = userEvent.setup();
+    renderCard();
+
+    await user.click(
+      screen.getByRole("button", { name: /cancel appointment/i }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: /cancel this appointment/i,
+    });
+    // Destructive confirm lives inside the dialog, not on the card itself.
+    expect(
+      within(dialog).getByRole("button", { name: /yes, cancel/i }),
+    ).toBeInTheDocument();
+  });
+
   it("has no axe accessibility violations", async () => {
     const { container } = renderCard();
     expect(await axe(container)).toHaveNoViolations();
@@ -114,6 +130,14 @@ describe("AppointmentCard — past", () => {
 
     expect(
       screen.queryByRole("button", { name: /reschedule/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("offers no cancellation for past visits", () => {
+    renderCard({ appointmentDate: "2026-09-20", appointmentTime: "09:00 AM" }, "8 Days Ago");
+
+    expect(
+      screen.queryByRole("button", { name: /cancel appointment/i }),
     ).not.toBeInTheDocument();
   });
 });

@@ -1,5 +1,6 @@
 import { api } from "@/lib/api/client";
 import { parseAppointment, parseAppointments } from "@/lib/api/types";
+import { messageFrom } from "@/lib/api/request";
 
 /**
  * Browser-side appointments data (ARCHITECTURE → Data fetching: "my
@@ -29,4 +30,16 @@ export function rescheduleAppointment(id, values) {
       schema: undefined,
     })
     .then((data) => parseAppointment(data));
+}
+
+/**
+ * DELETE /appointments/:id — cancel a booking (owner only; there is no
+ * cancelled state, API_CONTRACT → Appointments notes). Resolves to the
+ * backend's `{ message }`.
+ *
+ * @param {string} id
+ * @returns {Promise<{ message: string }>}
+ */
+export function cancelAppointment(id) {
+  return api.delete(`/api/appointments/${encodeURIComponent(id)}`);
 }

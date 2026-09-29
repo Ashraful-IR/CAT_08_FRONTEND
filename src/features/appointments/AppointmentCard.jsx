@@ -4,6 +4,7 @@ import { formatBDT } from "@/lib/format";
 import { Avatar } from "@/components/common/Avatar";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { RescheduleDialog } from "./RescheduleDialog";
+import { CancelDialog } from "./CancelDialog";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -90,7 +91,7 @@ export function AppointmentCard({ appointment, doctor, relativeDay }) {
       </div>
 
       {upcoming && (
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
           <RescheduleDialog
             appointment={appointment}
             doctorsById={{}}
@@ -98,6 +99,16 @@ export function AppointmentCard({ appointment, doctor, relativeDay }) {
               <DialogTrigger asChild>
                 <Button variant="outline" className="rounded-full">
                   Reschedule
+                </Button>
+              </DialogTrigger>
+            }
+          />
+          <CancelDialog
+            appointment={appointment}
+            trigger={
+              <DialogTrigger asChild>
+                <Button variant="destructive" className="rounded-full">
+                  Cancel appointment
                 </Button>
               </DialogTrigger>
             }
