@@ -1,6 +1,7 @@
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { SkipLink } from "@/components/common/SkipLink";
 import { Navbar } from "@/components/common/Navbar";
 import { MobileTabBar } from "@/components/common/MobileTabBar";
 import { Footer } from "@/components/common/Footer";
@@ -25,8 +26,12 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${jakarta.variable}`}>
       <body className="font-sans antialiased flex flex-col min-h-screen">
         <Providers>
+          <SkipLink />
           <Navbar />
-          <main className="flex-1 pt-[104px] pb-16 md:pb-0">{children}</main>
+          <main
+            id="main"
+            className="flex-1 pt-[104px] pb-16 md:pb-0"
+          >{children}</main>
           <Footer />
           <MobileTabBar />
         </Providers>
