@@ -1,6 +1,27 @@
 import Image from "next/image";
 
 /**
+ * Only lets well-formed https URLs through to next/image — user-supplied
+ * photoURLs can be partially typed (live preview) or malicious
+ * (SECURITY_AND_AUTH → Input & output safety). Anything else falls back to
+ * initials.
+ *
+ * @param {string | null | undefined} src
+ * @returns {string | null}
+ */
+function safeHttpsUrl(src) {
+  if (typeof src !== "string" || src.length === 0) {
+    return null;
+  }
+  try {
+    const url = new URL(src);
+    return url.protocol === "https:" ? src : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Circular avatar: photo when available, initials fallback otherwise
  * (DESIGN_SYSTEM → Content rules: names as returned by the API; initials
  * skip dotted honorifics like "Dr.").
@@ -21,10 +42,12 @@ export function Avatar({ name, src, className = "size-12", textClassName = "text
     .join("")
     .toUpperCase();
 
-  if (src) {
+  const photo = safeHttpsUrl(src);
+
+  if (photo) {
     return (
       <Image
-        src={src}
+        src={photo}
         alt={name}
         width={48}
         height={48}
