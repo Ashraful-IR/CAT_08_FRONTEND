@@ -151,3 +151,40 @@ export const signInResponseFixture = {
 
 /** Response body of GET /auth/session. */
 export const sessionResponseFixture = { user: userFixture };
+
+/**
+ * Response body of GET /appointments/mine (Rifat's own bookings; frozen test
+ * clock is 2026-09-28): one upcoming (2026-09-30 10:00 AM with doctor 768,
+ * matching a slot the public list marks booked for that doctor) and one past
+ * (2026-09-20 09:00 AM) so the Upcoming/Past tabs both have content.
+ */
+export const myAppointmentFixtures = [
+  {
+    _id: "6a51ea90108e8a8b1cab3001",
+    userEmail: "rifat@example.com",
+    doctorId: "6a51ea90108e8a8b1caaf768",
+    doctorName: "Dr. Fatema Begum",
+    fee: 1300,
+    rating: 4.9,
+    patientName: "Rifat Hossain",
+    gender: "Male",
+    phone: "01712345678",
+    appointmentDate: "2026-09-30",
+    appointmentTime: "10:00 AM",
+    createdAt: "2026-09-27T09:30:00.000Z",
+  },
+  {
+    _id: "6a51ea90108e8a8b1cab3002",
+    userEmail: "rifat@example.com",
+    doctorId: "6a51ea90108e8a8b1caaf765",
+    doctorName: "Dr. Karim Uddin",
+    fee: 1000,
+    rating: 4.7,
+    patientName: "Rifat Hossain",
+    gender: "Male",
+    phone: "01712345678",
+    appointmentDate: "2026-09-20",
+    appointmentTime: "09:00 AM",
+    createdAt: "2026-09-15T11:00:00.000Z",
+  },
+];

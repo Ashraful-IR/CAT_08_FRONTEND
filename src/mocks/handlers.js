@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import {
   doctorFixtures,
+  myAppointmentFixtures,
   publicAppointmentFixtures,
   reviewFixtures,
   topRatedFixtures,
@@ -35,6 +36,12 @@ export const handlers = [
 
   // Public appointment list (B-001) — used only to grey out booked slots.
   http.get("/api/appointments", () => HttpResponse.json(publicAppointmentFixtures)),
+
+  // The signed-in user's own bookings; default session handler is 401, so
+  // tests that need this override /api/auth/session with 200 { user }.
+  http.get("/api/appointments/mine", () =>
+    HttpResponse.json(myAppointmentFixtures),
+  ),
 
   // Session: default signed-out so page tests are deterministic.
   // Sign-in flows override with 200 { user } via server.use(...).
