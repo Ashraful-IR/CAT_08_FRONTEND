@@ -7,7 +7,15 @@ import { server } from "@/mocks/node";
 import { sessionResponseFixture } from "@/mocks/fixtures";
 
 const { replaceMock } = vi.hoisted(() => ({ replaceMock: vi.fn() }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: replaceMock }) }));
+const navigationMock = vi.hoisted(() => ({
+  usePathname: () => "/register",
+  useSearchParams: () => new URLSearchParams("next=/doctors/abc"),
+}));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: replaceMock }),
+  usePathname: navigationMock.usePathname,
+  useSearchParams: navigationMock.useSearchParams,
+}));
 
 function createWrapper() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -81,8 +89,9 @@ describe("useSignUp", () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(receivedBody).toEqual(values);
-    // Sign-up must NOT log the user in.
-    expect(replaceMock).toHaveBeenCalledWith("/login");
+    // Sign-up must NOT log the user in, and the return target survives the
+    // register→login hop (task 3.4: book → register → login → back to book).
+    expect(replaceMock).toHaveBeenCalledWith("/login?next=%2Fdoctors%2Fabc");
   });
 
   it("surfaces the backend message on 400 (e.g. email already registered)", async () => {

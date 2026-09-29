@@ -8,7 +8,11 @@ import { RegisterForm } from "./RegisterForm";
 import { server } from "@/mocks/node";
 
 const { replaceMock } = vi.hoisted(() => ({ replaceMock: vi.fn() }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: replaceMock }) }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: replaceMock }),
+  usePathname: () => "/register",
+  useSearchParams: () => new URLSearchParams(),
+}));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 function renderForm() {

@@ -1,9 +1,10 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { getSession, signIn, signOut, signUp } from "./api";
+import { safeNextPath } from "./next-path";
 
 /**
  * Source of truth for "who am I" (SECURITY_AND_AUTH): GET /api/auth/session
@@ -50,10 +51,14 @@ export function useSignOut() {
 
 /**
  * POST /auth/sign-up/email. On 201 the user is NOT signed in — they are sent
- * to /login with a success toast (SECURITY_AND_AUTH → Session model).
+ * to /login with a success toast (SECURITY_AND_AUTH → Session model). A
+ * `?next=` target survives the register→login hop (task 3.4: a first-time
+ * visitor coming from the booking gate still lands back on the doctor
+ * profile after signing in); validated via safeNextPath.
  */
 export function useSignUp() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   return useMutation({
     mutationFn: signUp,
@@ -61,7 +66,8 @@ export function useSignUp() {
       toast.success("Account created", {
         description: "Sign in with your new credentials to continue.",
       });
-      router.replace("/login");
+      const next = safeNextPath(searchParams.get("next"));
+      router.replace(next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`);
     },
     onError: () => {
       // The API client already normalised this to a user-presentable message;
