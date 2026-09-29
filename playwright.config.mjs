@@ -3,7 +3,11 @@ import { defineConfig, devices } from "@playwright/test";
 // E2E runs against the Next dev server on port 5002 (CORS allowlist requirement).
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
+  // The booking-journey spec is a serial story (register → sign-in → book →
+  // manage) sharing one worker + cookie jar and one generated account; other
+  // specs still parallelise across workers.
+  fullyParallel: false,
+  workers: process.env.CI ? 1 : 2,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
