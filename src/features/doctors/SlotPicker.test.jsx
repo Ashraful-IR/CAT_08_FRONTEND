@@ -31,10 +31,33 @@ describe("SlotPicker", () => {
 
   it("renders the next 7 date tabs starting today", () => {
     renderPicker();
-    // 2026-09-28 (Wed) … 2026-10-04
+    // 2026-09-28 (Mon) … 2026-10-04
     expect(screen.getByRole("tab", { name: /today/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /oct 3/i })).toBeInTheDocument();
     expect(screen.getAllByRole("tab")).toHaveLength(7);
+  });
+
+  it("shows the weekday above the day number on each date chip", () => {
+    renderPicker();
+
+    // Design: stacked weekday + big day number (e.g. "Wed" over "30").
+    const tab = screen.getByRole("tab", { name: /sep 30/i });
+    expect(tab).toHaveTextContent("Wed");
+    expect(tab).toHaveTextContent("30");
+  });
+
+  it("groups slots into Morning and Afternoon sections", () => {
+    renderPicker();
+
+    const morning = screen.getByRole("radiogroup", { name: "Morning slots" });
+    const afternoon = screen.getByRole("radiogroup", {
+      name: "Afternoon slots",
+    });
+    // 09:00–11:30 AM = 6 slots; 12:00–04:30 PM = 10 slots.
+    expect(within(morning).getAllByRole("radio")).toHaveLength(6);
+    expect(within(afternoon).getAllByRole("radio")).toHaveLength(10);
+    expect(within(morning).getByRole("radio", { name: "09:00 AM" })).toBeInTheDocument();
+    expect(within(afternoon).getByRole("radio", { name: "12:00 PM" })).toBeInTheDocument();
   });
 
   it("lists the fixed half-hour grid for the selected date", () => {

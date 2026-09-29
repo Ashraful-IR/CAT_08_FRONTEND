@@ -66,11 +66,11 @@ export function BookingCard({ doctor, onConfirm }) {
       >
         Continue
       </Button>
-      {!slot && (
-        <p className="mt-2 text-label-md text-on-surface-variant">
-          Select a time slot to continue.
-        </p>
-      )}
+      <p className="mt-2 text-label-md text-on-surface-variant">
+        {slot
+          ? `Selected: ${slot.date} · ${slot.time}`
+          : "Free cancellation up to 24 hrs before your visit."}
+      </p>
     </div>
   );
 }

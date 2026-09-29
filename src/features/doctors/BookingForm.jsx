@@ -70,9 +70,6 @@ export function BookingForm({ doctor, slot, onBooked }) {
           message: error?.message ?? "Something went wrong. Please try again.",
         });
       }
-      if (error?.status === 409) {
-        // Re-throw nothing; the form stays open for another slot pick.
-      }
     }
   }
 

@@ -61,6 +61,16 @@ describe("BookingCard", () => {
     expect(screen.getByRole("button", { name: /continue/i })).toBeDisabled();
   });
 
+  it("reassures about free cancellation under the CTA (design copy)", () => {
+    renderWithProviders(
+      <BookingCard doctor={doctorFixture()} onConfirm={vi.fn()} />,
+    );
+
+    expect(
+      screen.getByText(/free cancellation up to 24 hrs before your visit/i),
+    ).toBeInTheDocument();
+  });
+
   it("has no axe accessibility violations", async () => {
     const { container } = renderWithProviders(
       <BookingCard doctor={doctorFixture()} onConfirm={vi.fn()} />,
