@@ -2,6 +2,9 @@ import Link from "next/link";
 import { CalendarDays, Clock, Stethoscope, User } from "lucide-react";
 import { formatBDT } from "@/lib/format";
 import { Avatar } from "@/components/common/Avatar";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { RescheduleDialog } from "./RescheduleDialog";
+import { Button } from "@/components/ui/button";
 
 /**
  * One appointment in the /appointments list (design →
@@ -85,6 +88,22 @@ export function AppointmentCard({ appointment, doctor, relativeDay }) {
           Booked {appointment.createdAt.slice(0, 10)}
         </span>
       </div>
+
+      {upcoming && (
+        <div className="flex justify-end">
+          <RescheduleDialog
+            appointment={appointment}
+            doctorsById={{}}
+            trigger={
+              <DialogTrigger asChild>
+                <Button variant="outline" className="rounded-full">
+                  Reschedule
+                </Button>
+              </DialogTrigger>
+            }
+          />
+        </div>
+      )}
     </article>
   );
 }

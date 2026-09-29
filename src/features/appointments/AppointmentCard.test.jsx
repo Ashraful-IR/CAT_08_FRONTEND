@@ -1,6 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { axe } from "jest-axe";
+import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
+import { server } from "@/mocks/node";
+import { myAppointmentFixtures } from "@/mocks/fixtures";
+import { Providers } from "@/app/providers";
 import { AppointmentCard } from "./AppointmentCard";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
@@ -34,15 +40,19 @@ const doctor = {
   description: "Expert in women's reproductive health and prenatal care.",
 };
 
+beforeAll(() => {
+  window.ResizeObserver =
+    window.ResizeObserver ||
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+});
+
 describe("AppointmentCard — upcoming", () => {
   it("shows doctor name, specialty, and the booked slot", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    renderCard();
 
     expect(screen.getByText("Dr. Fatema Begum")).toBeInTheDocument();
     expect(screen.getByText("Gynecologist")).toBeInTheDocument();
@@ -50,37 +60,19 @@ describe("AppointmentCard — upcoming", () => {
   });
 
   it("shows the consultation fee", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    renderCard();
 
     expect(screen.getByText("৳1,300")).toBeInTheDocument();
   });
 
   it("shows the relative-day badge", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    renderCard();
 
     expect(screen.getByText("In 2 Days")).toBeInTheDocument();
   });
 
   it("shows the patient details the booking was made for", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    renderCard();
 
     expect(screen.getByText("Rifat Hossain")).toBeInTheDocument();
     expect(screen.getByText("Male")).toBeInTheDocument();
@@ -88,43 +80,57 @@ describe("AppointmentCard — upcoming", () => {
   });
 
   it("renders doctor identity as a link to the profile", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    renderCard();
 
     const link = screen.getByRole("link", { name: /dr\. fatema begum/i });
     expect(link).toHaveAttribute("href", `/doctors/${doctor._id}`);
   });
 
+  it("offers rescheduling for upcoming visits", async () => {
+    const user = userEvent.setup();
+    renderCard();
+
+    await user.click(screen.getByRole("button", { name: /reschedule/i }));
+    expect(
+      await screen.findByRole("dialog", { name: /reschedule/i }),
+    ).toBeInTheDocument();
+  });
+
   it("has no axe accessibility violations", async () => {
-    const { container } = render(
-      <AppointmentCard
-        appointment={appointment()}
-        doctor={doctor}
-        relativeDay="In 2 Days"
-      />,
-    );
+    const { container } = renderCard();
     expect(await axe(container)).toHaveNoViolations();
   });
 });
 
 describe("AppointmentCard — past", () => {
   it("shows a past badge instead of the countdown", () => {
-    render(
-      <AppointmentCard
-        appointment={appointment({
-          appointmentDate: "2026-09-20",
-          appointmentTime: "09:00 AM",
-        })}
-        doctor={doctor}
-        relativeDay="8 Days Ago"
-      />,
-    );
+    renderCard({ appointmentDate: "2026-09-20", appointmentTime: "09:00 AM" }, "8 Days Ago");
 
     expect(screen.getByText("8 Days Ago")).toBeInTheDocument();
   });
+
+  it("offers no rescheduling for past visits", () => {
+    renderCard({ appointmentDate: "2026-09-20", appointmentTime: "09:00 AM" }, "8 Days Ago");
+
+    expect(
+      screen.queryByRole("button", { name: /reschedule/i }),
+    ).not.toBeInTheDocument();
+  });
 });
+
+function renderCard(overrides = {}, relativeDay = "In 2 Days") {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <Providers>
+        <AppointmentCard
+          appointment={appointment(overrides)}
+          doctor={doctor}
+          relativeDay={relativeDay}
+        />
+      </Providers>
+    </QueryClientProvider>,
+  );
+}

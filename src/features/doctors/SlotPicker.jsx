@@ -50,7 +50,12 @@ function tabName(date, todayIso) {
  *   dateCount?: number,
  * }} props
  */
-export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
+export function SlotPicker({
+  bookedSlots = [],
+  onSelect,
+  dateCount = 7,
+  selected = null,
+}) {
   const todayIso = toIsoDate(new Date());
   const dates = useMemo(
     () =>
@@ -59,7 +64,8 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
       ),
     [dateCount],
   );
-  const [activeDate, setActiveDate] = useState(dates[0]);
+  // A preselected slot (reschedule) forces the matching date tab open.
+  const [activeDate, setActiveDate] = useState(selected?.date ?? dates[0]);
 
   const slots = slotsForDate({
     date: activeDate,
@@ -89,6 +95,8 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
   const afternoon = slots.filter(
     (slot) => toMinutes(slot.time) >= NOON_MINUTES,
   );
+
+  const active = selected && selected.date === activeDate ? selected.time : null;
 
   return (
     <div>
@@ -132,6 +140,7 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
         role="tabpanel"
         aria-label={`Slots for ${activeDate}`}
       >
+        {/* Preselection state lives on the RadioGroup (uncontrolled otherwise). */}
         {/* Empty state fires when nothing is selectable (all past or all booked). */}
         {slots.every((slot) => slot.disabled) ? (
           <p className="mt-space-md rounded-xl bg-surface-container-low p-space-md text-body-sm text-on-surface-variant">
@@ -146,6 +155,7 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
               slots={morning}
               onSelect={onSelect}
               activeDate={activeDate}
+              selectedTime={active}
             />
             <SlotSection
               id="afternoon"
@@ -154,6 +164,7 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
               slots={afternoon}
               onSelect={onSelect}
               activeDate={activeDate}
+              selectedTime={active}
             />
           </div>
         )}
@@ -166,7 +177,7 @@ export function SlotPicker({ bookedSlots = [], onSelect, dateCount = 7 }) {
  * One Morning/Afternoon section: heading + radio group of slot chips.
  * Booked chips keep the strikethrough treatment (DESIGN_SYSTEM → Time slot).
  */
-function SlotSection({ id, title, ariaLabel, slots, onSelect, activeDate }) {
+function SlotSection({ id, title, ariaLabel, slots, onSelect, activeDate, selectedTime = null }) {
   if (slots.length === 0) {
     return null;
   }
@@ -182,6 +193,7 @@ function SlotSection({ id, title, ariaLabel, slots, onSelect, activeDate }) {
       <RadioGroup
         aria-label={ariaLabel}
         className="grid grid-cols-3 gap-2 sm:grid-cols-4"
+        value={selectedTime ?? undefined}
         onValueChange={(time) => onSelect({ date: activeDate, time })}
       >
         {slots.map((slot) => (
