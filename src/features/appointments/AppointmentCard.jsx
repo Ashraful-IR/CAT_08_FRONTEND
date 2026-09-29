@@ -5,6 +5,7 @@ import { Avatar } from "@/components/common/Avatar";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { RescheduleDialog } from "./RescheduleDialog";
 import { CancelDialog } from "./CancelDialog";
+import { ReviewDialog } from "@/features/reviews/ReviewDialog";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -90,7 +91,7 @@ export function AppointmentCard({ appointment, doctor, relativeDay }) {
         </span>
       </div>
 
-      {upcoming && (
+      {upcoming ? (
         <div className="flex justify-end gap-2">
           <RescheduleDialog
             appointment={appointment}
@@ -109,6 +110,19 @@ export function AppointmentCard({ appointment, doctor, relativeDay }) {
               <DialogTrigger asChild>
                 <Button variant="destructive" className="rounded-full">
                   Cancel appointment
+                </Button>
+              </DialogTrigger>
+            }
+          />
+        </div>
+      ) : (
+        <div className="flex justify-end">
+          <ReviewDialog
+            appointment={appointment}
+            trigger={
+              <DialogTrigger asChild>
+                <Button variant="outline" className="rounded-full">
+                  Leave a review
                 </Button>
               </DialogTrigger>
             }

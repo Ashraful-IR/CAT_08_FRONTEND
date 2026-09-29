@@ -140,6 +140,16 @@ describe("AppointmentCard — past", () => {
       screen.queryByRole("button", { name: /cancel appointment/i }),
     ).not.toBeInTheDocument();
   });
+
+  it("offers a review action for past visits", async () => {
+    const user = userEvent.setup();
+    renderCard({ appointmentDate: "2026-09-20", appointmentTime: "09:00 AM" }, "8 Days Ago");
+
+    await user.click(screen.getByRole("button", { name: /leave a review/i }));
+    expect(
+      await screen.findByRole("dialog", { name: /review dr\. fatema begum/i }),
+    ).toBeInTheDocument();
+  });
 });
 
 function renderCard(overrides = {}, relativeDay = "In 2 Days") {

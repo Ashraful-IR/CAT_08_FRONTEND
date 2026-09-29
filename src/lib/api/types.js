@@ -135,6 +135,11 @@ export function parseReviews(data) {
   return parseWith(z.array(reviewSchema), data, "Unexpected review data");
 }
 
+/** Parses an unknown value as a single Review. */
+export function parseReview(data) {
+  return parseWith(reviewSchema, data, "Unexpected review data");
+}
+
 /** Parses an unknown value as a User (session/sign-in responses). */
 export function parseUser(data) {
   return parseWith(userSchema, data, "Unexpected user data");
