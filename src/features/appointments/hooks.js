@@ -4,6 +4,8 @@ import {
   getMyAppointments,
   rescheduleAppointment,
 } from "./api";
+import { splitAppointments } from "./split";
+import { toIsoDate } from "@/lib/datetime";
 
 /** Centralised query keys for the appointments feature (ARCHITECTURE). */
 export const appointmentKeys = {
@@ -23,6 +25,38 @@ export function useMyAppointments() {
     queryFn: getMyAppointments,
     retry: false,
   });
+}
+
+/**
+ * Live count for the navbar's Appointments badge (design:
+ * docappoint_home_doctor_discovery → nav count). Reads the shared
+ * ['appointments','mine'] cache — appointments pages written straight into
+ * that cache (reschedule/cancel/book) update the badge for free.
+ *
+ * Fetches only while signed in; the 401-hook is skipped so a signed-out
+ * visitor (or an expiring session) never gets bounced to /login by the badge.
+ *
+ * @param {boolean} enabled - the session is signed in
+ * @returns {number | null} upcoming count, or null when not signed in
+ */
+export function useUpcomingAppointmentCount(enabled) {
+  const query = useQuery({
+    queryKey: appointmentKeys.mine,
+    queryFn: getMyAppointments,
+    enabled,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  if (!enabled || !query.data) {
+    return null;
+  }
+  const now = new Date();
+  const { upcoming } = splitAppointments(query.data, {
+    date: toIsoDate(now),
+    minutes: now.getHours() * 60 + now.getMinutes(),
+  });
+  return upcoming.length;
 }
 
 /**

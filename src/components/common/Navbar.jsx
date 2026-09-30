@@ -6,6 +6,9 @@ import { Logo } from "./Logo";
 import { UserMenu } from "./UserMenu";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/hooks";
+import { useUpcomingAppointmentCount } from "@/features/appointments/hooks";
+import { splitAppointments } from "@/features/appointments/split";
+import { toIsoDate } from "@/lib/datetime";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -20,6 +23,7 @@ const NAV_LINKS = [
  */
 export function Navbar() {
   const { user, isLoading } = useSession();
+  const upcomingCount = useUpcomingAppointmentCount(Boolean(user));
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -43,15 +47,32 @@ export function Navbar() {
           aria-label="Main"
           className="hidden md:flex items-center p-1 rounded-full bg-surface-container-low gap-1"
         >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-4 py-2 rounded-full text-label-lg text-on-surface-variant hover:text-on-surface transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const showBadge =
+              link.href === "/appointments" &&
+              upcomingCount !== null &&
+              upcomingCount > 0;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-label={
+                  showBadge ? `Appointments, ${upcomingCount} upcoming` : undefined
+                }
+                className="px-4 py-2 rounded-full text-label-lg text-on-surface-variant hover:text-on-surface transition-colors"
+              >
+                {link.label}
+                {showBadge && (
+                  <span
+                    aria-hidden="true"
+                    className="ml-1.5 inline-flex items-center justify-center size-4 rounded-full bg-error text-on-error align-[1px] text-[10px] leading-none font-bold"
+                  >
+                    {upcomingCount > 9 ? "9+" : upcomingCount}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-space-md">
