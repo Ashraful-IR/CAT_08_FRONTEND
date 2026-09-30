@@ -13,6 +13,10 @@ const PASSWORD = "Secret1";
 const NAME = `E2E Runner ${timestamp}`;
 
 test.describe.serial("booking journey", () => {
+  // Every step here hits the deployed serverless backend; cold starts can
+  // eat 20s+ per request, so the 30s default test timeout is too tight.
+  test.setTimeout(90_000);
+
   let doctorUrl;
 
   test("register creates an account and forwards to login", async ({ page }) => {
@@ -40,8 +44,8 @@ test.describe.serial("booking journey", () => {
     await page.getByRole("button", { name: /sign in/i }).click();
 
     // Redirect waits on the sign-in POST against the deployed backend —
-    // allow for a serverless cold start.
-    await expect(page).toHaveURL(doctorUrl, { timeout: 15000 });
+    // allow for a serverless cold start (free-tier DB can be slow on first hit).
+    await expect(page).toHaveURL(doctorUrl, { timeout: 20000 });
     await expect(
       page.getByRole("heading", { level: 1, name: /.+/i }),
     ).toBeVisible();
@@ -74,25 +78,35 @@ test.describe.serial("booking journey", () => {
     await signIn(page);
     await page.goto(doctorUrl);
 
-    // Today's grid can already be exhausted when the run happens late in
-    // the day, so book on the second date tab (tomorrow) and pick the first
-    // slot that is not disabled (booked/past slots are disabled). The radio
-    // input is visually hidden (sr-only); clicking its label selects it.
-    await page.getByRole("tab").nth(1).click();
-    const slot = page
-      .locator('label:has(button[role="radio"]:not([disabled]))')
-      .first();
-    await slot.click();
-    await page.getByRole("button", { name: /continue/i }).click();
+    // Book on a forward date tab (today's grid can be exhausted late in the
+    // day) and pick the first selectable slot. A slot can still be taken
+    // between render and submit — and failed runs leave bookings behind —
+    // so a 409 ("Doctor is already booked at this slot", API_CONTRACT →
+    // Status codes) sends us to the NEXT date tab for another attempt. The
+    // radio input is visually hidden (sr-only); clicking its label selects it.
+    const dialog = page.getByRole("dialog", { name: /appointment confirmed/i });
+    const conflict = page
+      .getByRole("alert")
+      .filter({ hasText: /already booked at this slot/i });
 
-    await page.getByLabel("Patient name").fill(NAME);
-    await page.getByRole("radio", { name: "Male", exact: true }).click();
-    await page.getByLabel(/phone/i).fill("01712345678");
-    await page.getByRole("button", { name: /confirm booking/i }).click();
+    let booked = false;
+    for (let attempt = 0; attempt < 3 && !booked; attempt += 1) {
+      await page.getByRole("tab").nth(1 + attempt).click();
+      await page
+        .locator('label:has(button[role="radio"]:not([disabled]))')
+        .first()
+        .click();
+      await page.getByRole("button", { name: /continue/i }).click();
 
-    await expect(
-      page.getByRole("dialog", { name: /appointment confirmed/i }),
-    ).toBeVisible();
+      await page.getByLabel("Patient name").fill(NAME);
+      await page.getByRole("radio", { name: "Male", exact: true }).click();
+      await page.getByLabel(/phone/i).fill("01712345678");
+      await page.getByRole("button", { name: /confirm booking/i }).click();
+
+      await expect(dialog.or(conflict)).toBeVisible({ timeout: 20000 });
+      booked = await dialog.isVisible();
+    }
+    expect(booked).toBe(true);
     await page.getByRole("button", { name: /^done$/i }).click();
 
     await expect(page).toHaveURL(/\/appointments/);
