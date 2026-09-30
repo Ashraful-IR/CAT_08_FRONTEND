@@ -43,9 +43,10 @@ pnpm dev                     # http://localhost:5002 (backend CORS allowlist)
 ## Deployment (Vercel)
 
 1. Import the repo, framework preset **Next.js** (defaults are fine; no custom build command).
-2. Environment variables:
+2. Environment variables (set them **before** deploying — `NEXT_PUBLIC_*` values are inlined at build time):
    - `BACKEND_URL` — the backend base URL, e.g. `https://docappoint-backend-tau.vercel.app` (server-only).
-   - `NEXT_PUBLIC_APP_URL` — the deployed frontend URL (used by `sitemap.js` / `robots.js`).
+   - `NEXT_PUBLIC_SITE_URL` — the deployed frontend URL (read by `sitemap.js` / `robots.js`).
+   - `NEXT_PUBLIC_APP_URL` — same value, kept for reference/readme parity.
 3. Cookie caveat (DECISIONS B-002): the backend's cookie is `secure:false; sameSite:lax`. Same-origin proxying keeps it first-party, but ask the backend owner to set `secure:true` in production. If the API is later put on a different domain, the proxy must be kept (CORS allowlist only contains `localhost:5002`, B-005).
 4. Security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`) are set in `next.config.mjs` for all routes.
 
