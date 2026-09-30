@@ -51,7 +51,10 @@ test.describe.serial("booking journey", () => {
     await expect(
       page.getByRole("heading", { name: /sign in to book/i }),
     ).toBeVisible();
+    // Scoped to main: the navbar and footer also carry plain /login "Sign in"
+    // links; the gate's link is the one carrying the ?next= return path.
     const signInLink = page
+      .getByRole("main")
       .getByRole("link", { name: /sign in/i })
       .filter({ hasNotText: "Register" })
       .last();
