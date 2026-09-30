@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, Star } from "lucide-react";
+import { SafeImage } from "@/components/common/SafeImage";
 import { formatBDT, formatRating } from "@/lib/format";
 
 /**
@@ -28,12 +28,20 @@ export function DoctorCard({ doctor }) {
       <div className="flex items-start gap-space-sm">
         <div className="relative shrink-0">
           {doctor.photoURL ? (
-            <Image
+            <SafeImage
               src={doctor.photoURL}
               alt={doctor.name}
               width={64}
               height={64}
               className="size-16 rounded-xl object-cover"
+              fallback={
+                <div
+                  aria-hidden="true"
+                  className="flex size-16 items-center justify-center rounded-xl bg-primary-container text-headline-sm text-on-primary-container"
+                >
+                  {initials}
+                </div>
+              }
             />
           ) : (
             <div

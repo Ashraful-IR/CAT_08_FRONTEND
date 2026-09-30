@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SafeImage } from "./SafeImage";
 
 /**
  * Only lets well-formed https URLs through to next/image — user-supplied
@@ -24,7 +24,9 @@ function safeHttpsUrl(src) {
 /**
  * Circular avatar: photo when available, initials fallback otherwise
  * (DESIGN_SYSTEM → Content rules: names as returned by the API; initials
- * skip dotted honorifics like "Dr.").
+ * skip dotted honorifics like "Dr."). A photo that is present but dead
+ * (backend seed URLs 404 — DECISIONS B-007) swaps to initials at runtime
+ * via SafeImage.
  *
  * @param {{
  *   name: string,
@@ -46,12 +48,20 @@ export function Avatar({ name, src, className = "size-12", textClassName = "text
 
   if (photo) {
     return (
-      <Image
+      <SafeImage
         src={photo}
         alt={name}
         width={48}
         height={48}
         className={`${className} shrink-0 rounded-full object-cover`}
+        fallback={
+          <div
+            aria-hidden="true"
+            className={`${className} ${textClassName} flex shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary-container`}
+          >
+            {initials}
+          </div>
+        }
       />
     );
   }

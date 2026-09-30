@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck, ChevronRight, Star } from "lucide-react";
 import { ApiError } from "@/lib/api/errors";
+import { SafeImage } from "@/components/common/SafeImage";
 import { formatBDT, formatRating } from "@/lib/format";
 import { getDoctor, getReviews } from "@/features/doctors/api";
 import { ReviewList } from "@/features/doctors/ReviewList";
@@ -86,13 +86,21 @@ export default async function DoctorProfilePage({ params }) {
             <div className="flex flex-col items-start gap-space-md sm:flex-row sm:items-center sm:gap-space-lg">
               <div className="relative shrink-0">
                 {doctor.photoURL ? (
-                  <Image
+                  <SafeImage
                     src={doctor.photoURL}
                     alt={doctor.name}
                     width={112}
                     height={112}
                     priority
                     className="size-24 rounded-full object-cover ring-4 ring-surface-container-highest sm:size-28"
+                    fallback={
+                      <div
+                        aria-hidden="true"
+                        className="flex size-24 items-center justify-center rounded-full bg-primary-container text-headline-lg text-on-primary-container ring-4 ring-surface-container-highest sm:size-28"
+                      >
+                        {initialsOf(doctor.name)}
+                      </div>
+                    }
                   />
                 ) : (
                   <div

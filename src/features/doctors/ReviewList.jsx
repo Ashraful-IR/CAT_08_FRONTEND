@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Star } from "lucide-react";
+import { SafeImage } from "@/components/common/SafeImage";
 import { formatDate, formatRating } from "@/lib/format";
 
 /** Renders five 16px stars, `filled` of them solid (design: star rows). */
@@ -101,12 +101,20 @@ export function ReviewList({ reviews, rating = 0 }) {
             <div className="flex items-start justify-between gap-space-sm">
               <div className="flex min-w-0 items-center gap-2.5">
                 {review.userPhotoURL ? (
-                  <Image
+                  <SafeImage
                     src={review.userPhotoURL}
                     alt=""
                     width={36}
                     height={36}
                     className="size-9 shrink-0 rounded-full object-cover"
+                    fallback={
+                      <div
+                        aria-hidden="true"
+                        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface-container-highest text-label-md font-bold text-primary"
+                      >
+                        {initialsOf(review)}
+                      </div>
+                    }
                   />
                 ) : (
                   <div
