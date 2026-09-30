@@ -104,7 +104,7 @@ export function ProfileForm() {
             type="url"
             className="h-12"
             autoComplete="url"
-            placeholder="https://i.ibb.co/your-photo.jpg"
+            placeholder="https://example.com/your-photo.jpg"
             {...form.register("photoURL")}
             {...fieldAria("photoURL")}
           />

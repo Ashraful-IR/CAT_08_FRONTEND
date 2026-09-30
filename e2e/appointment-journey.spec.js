@@ -19,7 +19,9 @@ test.describe.serial("booking journey", () => {
     await page.goto("/register");
     await page.getByLabel("Full name").fill(NAME);
     await page.getByLabel("Email").fill(EMAIL);
-    await page.getByLabel("Photo URL").fill("https://i.ibb.co/e2e-avatar.jpg");
+    await page.getByLabel("Photo URL").fill(
+      "https://randomuser.me/api/portraits/women/44.jpg",
+    );
     await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
     await page.getByLabel("Confirm password").fill(PASSWORD);
     await page.getByRole("button", { name: /create account/i }).click();
@@ -37,7 +39,9 @@ test.describe.serial("booking journey", () => {
     await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
     await page.getByRole("button", { name: /sign in/i }).click();
 
-    await expect(page).toHaveURL(doctorUrl);
+    // Redirect waits on the sign-in POST against the deployed backend —
+    // allow for a serverless cold start.
+    await expect(page).toHaveURL(doctorUrl, { timeout: 15000 });
     await expect(
       page.getByRole("heading", { level: 1, name: /.+/i }),
     ).toBeVisible();
@@ -106,6 +110,9 @@ test.describe.serial("booking journey", () => {
     const upcoming = page.getByRole("tabpanel", {
       name: /upcoming appointments/i,
     });
+    // The list is a client fetch against the deployed backend — allow for a
+    // serverless cold start before the panel (and its data) appears.
+    await expect(upcoming).toBeVisible({ timeout: 15000 });
     await expect(upcoming.getByText(NAME)).toBeVisible();
     await expect(
       upcoming.getByRole("button", { name: /reschedule/i }).first(),

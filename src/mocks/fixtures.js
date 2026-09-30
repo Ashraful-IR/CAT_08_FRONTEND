@@ -10,7 +10,7 @@ export const doctorFixtures = [
     specialty: "Gynecologist",
     fee: 1300,
     rating: 4.9,
-    photoURL: "https://i.ibb.co/dr-fatema.jpg",
+    photoURL: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=256&q=80",
     description: "Expert in women's reproductive health and prenatal care.",
   },
   {
@@ -19,7 +19,7 @@ export const doctorFixtures = [
     specialty: "Dermatologist",
     fee: 1000,
     rating: 4.7,
-    photoURL: "https://i.ibb.co/dr-karim.jpg",
+    photoURL: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=256&q=80",
     description: "Skin care specialist with over 10 years of clinical practice.",
   },
   {
@@ -28,7 +28,7 @@ export const doctorFixtures = [
     specialty: "Cardiologist",
     fee: 1500,
     rating: 4.9,
-    photoURL: "https://i.ibb.co/dr-ayesha.jpg",
+    photoURL: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=256&q=80",
     description: "Interventional cardiologist focused on preventive heart care.",
   },
   {
@@ -37,7 +37,7 @@ export const doctorFixtures = [
     specialty: "Orthopedic",
     fee: 1200,
     rating: 4.5,
-    photoURL: "https://i.ibb.co/dr-mahmud.jpg",
+    photoURL: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=256&q=80",
     description: "Bone, joint and sports-injury specialist.",
   },
   {
@@ -46,7 +46,7 @@ export const doctorFixtures = [
     specialty: "Pediatrician",
     fee: 900,
     rating: 4.8,
-    photoURL: "https://i.ibb.co/dr-nusrat.jpg",
+    photoURL: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=256&q=80",
     description: "Child health specialist with a gentle, family-first approach.",
   },
 ];
@@ -66,7 +66,7 @@ export const reviewFixtures = [
     comment: "Very caring and thorough. Everything was explained clearly.",
     userEmail: "patient1@example.com",
     userName: "Tania Akter",
-    userPhotoURL: "https://i.ibb.co/patient-tania.jpg",
+    userPhotoURL: "https://randomuser.me/api/portraits/women/65.jpg",
     createdAt: "2026-09-20T10:00:00.000Z",
   },
   {
@@ -139,7 +139,7 @@ export const userFixture = {
   id: "u-123",
   name: "Rifat Hossain",
   email: "rifat@example.com",
-  photoURL: "https://i.ibb.co/avatar-rifat.jpg",
+  photoURL: "https://randomuser.me/api/portraits/men/32.jpg",
 };
 
 /** Response body of POST /auth/sign-in/email (token is ignored by the frontend). */

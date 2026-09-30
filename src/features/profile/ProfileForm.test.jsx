@@ -47,7 +47,7 @@ describe("ProfileForm", () => {
       await screen.findByLabelText(/full name/i),
     ).toHaveValue("Rifat Hossain");
     expect(screen.getByLabelText(/photo url/i)).toHaveValue(
-      "https://i.ibb.co/avatar-rifat.jpg",
+      "https://randomuser.me/api/portraits/men/32.jpg",
     );
   });
 
