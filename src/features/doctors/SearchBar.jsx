@@ -51,12 +51,12 @@ export function SearchBar({ className }) {
           value={value}
           onChange={(event) => setValue(event.target.value)}
           placeholder="Search by doctor name or specialty..."
-          className="h-12 rounded-full border-transparent bg-surface-container-low pl-12 text-body-md placeholder:text-on-surface-variant/60"
+          className="h-12 rounded-md border-transparent bg-surface-container-low pl-12 text-body-md placeholder:text-on-surface-variant/60"
         />
       </div>
       <Button
         type="submit"
-        className="h-12 gap-2 rounded-full px-space-lg text-label-lg"
+        className="h-12 gap-2 rounded-md px-space-lg text-white"
       >
         Find Care
       </Button>

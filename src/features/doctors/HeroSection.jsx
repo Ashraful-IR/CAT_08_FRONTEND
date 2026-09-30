@@ -65,8 +65,8 @@ export function HeroSection({ specialties = [] }) {
             onSubmit={handleSubmit}
             className="mt-space-sm flex flex-col gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-level-2"
           >
-            <div className="grid grid-cols-1 gap-space-sm md:grid-cols-12">
-              <div className="relative flex items-center md:col-span-5">
+            <div className="flex flex-col items-center gap-space-sm md:grid md:grid-cols-9 md:gap-space-sm">
+              <div className="relative w-full flex items-center md:col-span-5">
                 <Search
                   aria-hidden="true"
                   className="absolute left-3.5 size-5 text-on-surface-variant"
@@ -84,7 +84,7 @@ export function HeroSection({ specialties = [] }) {
                 />
               </div>
 
-              <div className="relative flex items-center md:col-span-4">
+              <div className="relative w-full flex items-center justify-between md:col-span-4">
                 <Stethoscope
                   aria-hidden="true"
                   className="absolute left-3.5 size-5 text-on-surface-variant"
@@ -112,10 +112,10 @@ export function HeroSection({ specialties = [] }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-end pt-space-xs">
+            <div className="flex items-center justify-center pt-space-xs w-full">
               <Button
                 type="submit"
-                className="h-12 w-full gap-2 rounded-full px-6 text-label-lg sm:w-auto"
+                className="h-12 w-full gap-2 rounded-md px-6 text-white "
               >
                 Find a Doctor
                 <ArrowRight aria-hidden="true" className="size-4" />
