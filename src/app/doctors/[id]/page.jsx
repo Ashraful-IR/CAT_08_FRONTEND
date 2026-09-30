@@ -145,8 +145,8 @@ export default async function DoctorProfilePage({ params }) {
             </div>
 
             {/* Stat strip (design: bottom hero strip; only real data shown). */}
-            <div className="mt-space-md grid grid-cols-2 gap-2 rounded-xl bg-surface-container-low/60 p-space-md sm:grid-cols-3">
-              <div className="flex flex-col">
+            <div className="flex flex-col-3 mt-8 px-5 items-center justify-between ">
+              <div className="flex flex-col gap-4 ">
                 <span className="text-label-sm uppercase tracking-wide text-on-surface-variant">
                   Consultation fee
                 </span>
@@ -157,7 +157,7 @@ export default async function DoctorProfilePage({ params }) {
                   </span>
                 </span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col  gap-4">
                 <span className="text-label-sm uppercase tracking-wide text-on-surface-variant">
                   Patient rating
                 </span>
@@ -171,7 +171,7 @@ export default async function DoctorProfilePage({ params }) {
                   </span>
                 </span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-4">
                 <span className="text-label-sm uppercase tracking-wide text-on-surface-variant">
                   Reviews
                 </span>
@@ -181,10 +181,10 @@ export default async function DoctorProfilePage({ params }) {
               </div>
             </div>
 
-            <h2 className="mt-space-md text-headline-sm text-on-surface">
+            <h2 className="mt-space-md px-5 text-headline-sm text-on-surface">
               About
             </h2>
-            <p className="mt-1 text-body-md text-on-surface-variant">
+            <p className="mt-1 text-body-md text-on-surface-variant px-5">
               {doctor.description}
             </p>
           </header>

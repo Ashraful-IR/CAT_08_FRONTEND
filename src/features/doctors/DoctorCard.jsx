@@ -70,7 +70,7 @@ export function DoctorCard({ doctor }) {
               {doctor.name}
             </Link>
           </h2>
-          <p className="text-label-sm font-semibold text-primary">
+          <p className="text-label-xl font-semibold text-primary">
             {doctor.specialty}
           </p>
           <div className="mt-1 flex items-center gap-1.5">
