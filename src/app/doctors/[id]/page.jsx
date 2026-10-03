@@ -49,7 +49,7 @@ export default async function DoctorProfilePage({ params }) {
   const reviews = await getReviews(id).catch(() => []);
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] px-margin-mobile py-space-lg md:px-margin">
+    <div className="mx-auto w-full max-w-7xl px-margin-mobile py-space-lg md:px-margin">
       {/* Breadcrumb (design: chevron trail with the doctor as current page). */}
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-1.5 text-label-md text-on-surface-variant">
