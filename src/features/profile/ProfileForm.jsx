@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,18 @@ import { profileSchema } from "./schemas";
  * it, API_CONTRACT → Users).
  */
 export function ProfileForm() {
-  const { user } = useSession();
+  const { user, isLoading } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // The cookie-presence middleware guard was removed with D-014 (the session
+  // cookie lives on the backend origin, invisible to this app's middleware),
+  // so the signed-out case redirects client-side with the same `next` UX.
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace(`/login?next=${pathname}`);
+    }
+  }, [isLoading, user, router, pathname]);
 
   const form = useForm({
     resolver: zodResolver(profileSchema),
@@ -53,7 +65,8 @@ export function ProfileForm() {
   }
 
   if (!user) {
-    // Middleware guards the route; this covers a briefly-expired session.
+    // Session loading (or the redirect above is in flight for a signed-out
+    // visitor) — the form renders only for a real session.
     return (
       <p role="status" className="text-body-md text-on-surface-variant">
         Loading your profile…

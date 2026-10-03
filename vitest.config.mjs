@@ -9,6 +9,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.js"],
     css: false,
+    // D-014: browser calls go direct to the backend when this is set. Vitest
+    // loads .env files, so pin it empty here — the MSW handlers match the
+    // relative paths the client uses when the variable is unset.
+    env: { NEXT_PUBLIC_API_URL: "" },
     include: ["src/**/*.{test,spec}.{js,jsx}"],
     coverage: {
       provider: "v8",

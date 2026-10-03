@@ -10,8 +10,9 @@ import { sessionResponseFixture, userFixture } from "@/mocks/fixtures";
 import { Providers } from "@/app/providers";
 import { ProfileForm } from "./ProfileForm";
 
+const { replaceMock } = vi.hoisted(() => ({ replaceMock: vi.fn() }));
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  useRouter: () => ({ push: vi.fn(), replace: replaceMock }),
   usePathname: () => "/profile",
   useSearchParams: () => new URLSearchParams(),
 }));
@@ -148,5 +149,23 @@ describe("ProfileForm", () => {
     const { container } = renderForm();
     await screen.findByLabelText(/full name/i);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  // DECISIONS D-014: the cookie-presence middleware guard was removed (the
+  // session cookie lives on the backend origin now), so the signed-out case is
+  // handled client-side with the same redirect UX.
+  it("redirects a signed-out visitor to /login with a next param", async () => {
+    server.use(
+      http.get("/api/auth/session", () =>
+        HttpResponse.json({ message: "No active session" }, { status: 401 }),
+      ),
+    );
+
+    renderForm();
+
+    await waitFor(() =>
+      expect(replaceMock).toHaveBeenCalledWith("/login?next=/profile"),
+    );
+    expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { http, HttpResponse } from "msw";
 import { z } from "zod";
 import { api, setUnauthorizedHandler, messageFrom } from "./client";
@@ -145,5 +145,46 @@ describe("api client (browser)", () => {
       "Email already registered",
     );
     expect(messageFrom(null, "fallback")).toBe("fallback");
+  });
+});
+
+// DECISIONS D-014 (resolves B-009): browser calls go straight to the backend
+// so the Better Auth OAuth state/session cookies land on the backend origin
+// (cross-site, SameSite=None; Partitioned). The backend's CORS allowlist and
+// cross-site cookie config were built for exactly this. Proxying the first hop
+// stranded the state cookie on the frontend origin → ?error=state_mismatch.
+describe("api client base URL (D-014: direct backend calls)", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("prefixes requests with NEXT_PUBLIC_API_URL when it is set", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_URL", "https://backend.example.com");
+    let seenUrl = null;
+    server.use(
+      http.get("https://backend.example.com/api/doctors", ({ request }) => {
+        seenUrl = request.url;
+        return HttpResponse.json(doctorFixtures);
+      }),
+    );
+
+    await api.get("/api/doctors");
+
+    expect(seenUrl).toBe("https://backend.example.com/api/doctors");
+  });
+
+  it("keeps relative URLs when NEXT_PUBLIC_API_URL is unset/empty (tests, tooling)", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_URL", "");
+    let matched = false;
+    server.use(
+      http.get("/api/doctors", ({ request }) => {
+        matched = request.url.endsWith("/api/doctors");
+        return HttpResponse.json(doctorFixtures);
+      }),
+    );
+
+    await api.get("/api/doctors");
+
+    expect(matched).toBe(true);
   });
 });

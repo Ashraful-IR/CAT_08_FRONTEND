@@ -12,16 +12,12 @@ const nextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 
-  // Same-origin API proxy: the browser never talks to the backend directly.
-  // Keeps the httpOnly auth cookie first-party and avoids CORS entirely.
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${BACKEND_URL}/api/:path*`,
-      },
-    ];
-  },
+  // No /api rewrite proxy: as of DECISIONS D-014 the browser calls the backend
+  // DIRECTLY via NEXT_PUBLIC_API_URL (credentials: 'include'). The proxy used
+  // to strand Better Auth's OAuth state + session cookies on this origin —
+  // Google's callback then failed with ?error=state_mismatch. Do not re-add an
+  // /api/:path* rewrite for browser traffic; Server Components call the
+  // backend server-side via serverFetch (BACKEND_URL).
 
   async headers() {
     return [

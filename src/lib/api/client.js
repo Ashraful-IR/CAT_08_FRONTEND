@@ -17,6 +17,23 @@ function run401Hook() {
   if (handle401) handle401();
 }
 
+/**
+ * Browser base URL for backend calls (DECISIONS D-014, resolves B-009:
+ * Better Auth sets the OAuth state + session cookies on the BACKEND origin —
+ * `SameSite=None; Secure; Partitioned` — which is what the round trip needs.
+ * Proxying the first hop through this app stranded the state cookie on the
+ * frontend origin and Google's callback failed with `?error=state_mismatch`.
+ * The backend's CORS allowlist + cross-site cookie config were built for the
+ * direct model. Unset (tests, tooling) ⇒ relative URLs, so the MSW handlers
+ * keep matching unchanged.
+ *
+ * @param {string} path - backend path beginning with /api/…
+ * @returns {string}
+ */
+function apiUrl(path) {
+  return `${process.env.NEXT_PUBLIC_API_URL || ""}${path}`;
+}
+
 export const api = {
   /**
    * @template {import("zod").ZodTypeAny} [S=undefined]
@@ -25,7 +42,7 @@ export const api = {
    * @param {{ signal?: AbortSignal, skip401Hook?: boolean }} [options]
    */
   async get(url, schema, options = {}) {
-    const { data } = await request(url, { method: "GET", signal: options.signal }, {
+    const { data } = await request(apiUrl(url), { method: "GET", signal: options.signal }, {
       on401: options.skip401Hook ? undefined : run401Hook,
     });
     return schema ? schema.parse(data) : data;
@@ -38,7 +55,7 @@ export const api = {
    */
   async post(url, body, options = {}) {
     const { status, data } = await request(
-      url,
+      apiUrl(url),
       { method: "POST", body: JSON.stringify(body ?? {}) },
       { on401: options.skip401Hook ? undefined : run401Hook },
     );
@@ -51,7 +68,7 @@ export const api = {
    * @param {{ schema?: import("zod").ZodTypeAny }} [options]
    */
   async patch(url, body, options = {}) {
-    const { data } = await request(url, { method: "PATCH", body: JSON.stringify(body ?? {}) }, {
+    const { data } = await request(apiUrl(url), { method: "PATCH", body: JSON.stringify(body ?? {}) }, {
       on401: run401Hook,
     });
     return options.schema ? options.schema.parse(data) : data;
@@ -62,7 +79,7 @@ export const api = {
    * @param {{ schema?: import("zod").ZodTypeAny }} [options]
    */
   async delete(url, options = {}) {
-    const { data } = await request(url, { method: "DELETE" }, { on401: run401Hook });
+    const { data } = await request(apiUrl(url), { method: "DELETE" }, { on401: run401Hook });
     return options.schema ? options.schema.parse(data) : data;
   },
 };
