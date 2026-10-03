@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DoctorCard } from "./DoctorCard";
 
@@ -19,7 +20,7 @@ export function TopRatedSection({ doctors }) {
             Highly rated professionals trusted by our patients.
           </p>
         </div>
-        <a
+        <Link
           href="/doctors"
           className="group inline-flex items-center gap-1.5 text-label-lg font-semibold text-primary transition-colors hover:text-primary-container"
         >
@@ -28,7 +29,7 @@ export function TopRatedSection({ doctors }) {
             aria-hidden="true"
             className="size-4 transition-transform group-hover:translate-x-1"
           />
-        </a>
+        </Link>
       </div>
 
       {doctors.length === 0 ? (
