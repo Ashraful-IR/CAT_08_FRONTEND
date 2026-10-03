@@ -84,4 +84,13 @@ export const handlers = [
   }),
 
   http.post("/api/auth/sign-out", () => HttpResponse.json({ success: true })),
+
+  // Social sign-in (Better Auth): 200 {url} — the browser is sent to the
+  // provider consent URL for the OAuth round trip. Tests override for the
+  // documented error cases (403 INVALID_ORIGIN, 500 provider not configured).
+  http.post("/api/auth/sign-in/social", () =>
+    HttpResponse.json({
+      url: "https://accounts.google.com/o/oauth2/v2/auth?client_id=mock&state=mock",
+    }),
+  ),
 ];

@@ -82,3 +82,14 @@ export const signInSchema = z.object({
 });
 
 /** @typedef {z.infer<typeof signInSchema>} SignInValues */
+
+/**
+ * POST /auth/sign-in/social response (API_CONTRACT → Auth): Better Auth
+ * returns the provider consent URL — the browser navigates to it for the
+ * Google round trip (consent → backend callback → callbackURL).
+ */
+export const socialSignInResponseSchema = z.object({
+  url: z.string().url(),
+});
+
+/** @typedef {z.infer<typeof socialSignInResponseSchema>} SocialSignInResponse */

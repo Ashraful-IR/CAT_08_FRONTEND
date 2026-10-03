@@ -109,6 +109,17 @@ describe("MSW handlers: auth (Better Auth contract, live-verified 2026-10-01)", 
     expect(await res.json()).toEqual({ success: true });
   });
 
+  it("POST /api/auth/sign-in/social returns 200 {url} pointing at the Google consent page", async () => {
+    const res = await fetch("/api/auth/sign-in/social", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: "google", callbackURL: "http://localhost:5002/" }),
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.url).toMatch(/^https:\/\/accounts\.google\.com\//);
+  });
+
   it("GET /api/auth/get-session returns the native Better Auth shape (user.image, not photoURL)", async () => {
     server.use(
       http.get("/api/auth/get-session", () =>

@@ -100,4 +100,12 @@ describe("LoginForm", () => {
 
     await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/"));
   });
+
+  it("offers the Continue with Google social option below the form", () => {
+    renderForm();
+    expect(
+      screen.getByRole("button", { name: /continue with google/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/or continue with/i)).toBeInTheDocument();
+  });
 });

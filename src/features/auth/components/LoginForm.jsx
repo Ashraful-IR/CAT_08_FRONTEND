@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { useSignIn } from "../hooks";
+import { GoogleButton } from "./GoogleButton";
 import { signInSchema } from "../schemas";
 import { safeNextPath } from "../next-path";
 import { getErrorMessage } from "@/lib/api/errors";
@@ -102,6 +103,14 @@ export function LoginForm() {
           "Sign in"
         )}
       </Button>
+
+      <div className="flex items-center gap-3">
+        <span aria-hidden="true" className="h-px flex-1 bg-outline-variant" />
+        <span className="text-label-md text-on-surface-variant">or continue with</span>
+        <span aria-hidden="true" className="h-px flex-1 bg-outline-variant" />
+      </div>
+
+      <GoogleButton callbackPath={searchParams.get("next") ?? "/"} />
 
       <p className="text-body-sm text-on-surface-variant text-center">
         New to DocAppoint?{" "}

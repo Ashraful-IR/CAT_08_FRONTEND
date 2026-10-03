@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { useSignUp } from "../hooks";
+import { GoogleButton } from "./GoogleButton";
 import { registerSchema } from "../schemas";
 import { getErrorMessage } from "@/lib/api/errors";
 
@@ -25,6 +27,8 @@ import { getErrorMessage } from "@/lib/api/errors";
  * linked to inputs through aria-describedby/aria-invalid.
  */
 export function RegisterForm() {
+  const searchParams = useSearchParams();
+
   const form = useForm({
     resolver: zodResolver(registerSchema),
     mode: "onTouched",
@@ -156,6 +160,14 @@ export function RegisterForm() {
           "Create account"
         )}
       </Button>
+
+      <div className="flex items-center gap-3">
+        <span aria-hidden="true" className="h-px flex-1 bg-outline-variant" />
+        <span className="text-label-md text-on-surface-variant">or continue with</span>
+        <span aria-hidden="true" className="h-px flex-1 bg-outline-variant" />
+      </div>
+
+      <GoogleButton callbackPath={searchParams.get("next") ?? "/"} />
     </form>
   );
 }

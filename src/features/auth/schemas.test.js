@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { registerSchema, signInSchema } from "./schemas";
+import { registerSchema, signInSchema, socialSignInResponseSchema } from "./schemas";
 
 const validRegister = {
   name: "Rifat Hossain",
@@ -59,5 +59,20 @@ describe("signInSchema", () => {
   it("rejects an invalid email and an empty password", () => {
     expect(signInSchema.safeParse({ email: "nope", password: "x" }).success).toBe(false);
     expect(signInSchema.safeParse({ email: "a@b.com", password: "" }).success).toBe(false);
+  });
+});
+
+describe("socialSignInResponseSchema (POST /auth/sign-in/social)", () => {
+  it("accepts { url } with the provider consent url", () => {
+    expect(
+      socialSignInResponseSchema.safeParse({
+        url: "https://accounts.google.com/o/oauth2/v2/auth?client_id=x&state=s",
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects a missing or non-url url", () => {
+    expect(socialSignInResponseSchema.safeParse({}).success).toBe(false);
+    expect(socialSignInResponseSchema.safeParse({ url: "not-a-url" }).success).toBe(false);
   });
 });
