@@ -19,23 +19,31 @@ test.describe.serial("booking journey", () => {
 
   let doctorUrl;
 
-  test("register creates an account and forwards to login", async ({ page }) => {
+  test("register creates an account and signs the user in", async ({ page }) => {
     await page.goto("/register");
     await page.getByLabel("Full name").fill(NAME);
     await page.getByLabel("Email").fill(EMAIL);
-    await page.getByLabel("Photo URL").fill(
+    await page.getByLabel("Photo URL (optional)").fill(
       "https://randomuser.me/api/portraits/women/44.jpg",
     );
     await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
     await page.getByLabel("Confirm password").fill(PASSWORD);
     await page.getByRole("button", { name: /create account/i }).click();
 
-    // Sign-up does not sign in (API_CONTRACT → Auth): lands on /login.
-    await expect(page).toHaveURL(/\/login/);
+    // Better Auth sign-up signs the user in (API_CONTRACT → Auth): the
+    // session cookie is set by the sign-up response, so we land on "/" with
+    // the navbar showing the signed-in account menu (serverless cold start:
+    // allow the session fetch some room).
+    await expect(page).toHaveURL("/", { timeout: 20000 });
+    await expect(
+      page.getByRole("button", { name: new RegExp(`account menu for ${NAME}`, "i") }),
+    ).toBeVisible({ timeout: 20000 });
   });
 
   test("sign-in reaches the profile picked at registration time", async ({ page }) => {
     // Arrive exactly as the booking gate would: /login?next=<doctor url>.
+    // (Register already signed this account in, but a signed-out journey —
+    // expired session or fresh context — must still work through /login.)
     doctorUrl = await pickFirstDoctorUrl(page);
     await page.goto(`/login?next=${encodeURIComponent(doctorUrl)}`);
 
@@ -76,14 +84,14 @@ test.describe.serial("booking journey", () => {
     page,
   }) => {
     await signIn(page);
-    await page.goto(doctorUrl);
 
     // Book on a forward date tab (today's grid can be exhausted late in the
-    // day) and pick the first selectable slot. A slot can still be taken
-    // between render and submit — and failed runs leave bookings behind —
-    // so a 409 ("Doctor is already booked at this slot", API_CONTRACT →
-    // Status codes) sends us to the NEXT date tab for another attempt. The
-    // radio input is visually hidden (sr-only); clicking its label selects it.
+    // day) and pick a RANDOM selectable slot — failed runs leave bookings
+    // behind, so "first slot" collides with leftovers across runs. A slot
+    // can still be taken between render and submit, so a 409 ("Doctor is
+    // already booked at this slot", API_CONTRACT → Status codes) retries on
+    // the NEXT date tab. The radio input is visually hidden (sr-only);
+    // clicking its label selects it.
     const dialog = page.getByRole("dialog", { name: /appointment confirmed/i });
     const conflict = page
       .getByRole("alert")
@@ -91,10 +99,18 @@ test.describe.serial("booking journey", () => {
 
     let booked = false;
     for (let attempt = 0; attempt < 3 && !booked; attempt += 1) {
+      // Reload per attempt: a 409 leaves the conflict alert mounted (the
+      // form's error state survives until unmount) and a success dialog
+      // blocks clicks on the page behind it — both would poison the
+      // dialog.or(conflict) check and the next attempt's interactions.
+      await page.goto(doctorUrl);
+
       await page.getByRole("tab").nth(1 + attempt).click();
-      await page
-        .locator('label:has(button[role="radio"]:not([disabled]))')
-        .first()
+      const options = page.locator(
+        'label:has(button[role="radio"]:not([disabled]))',
+      );
+      await options
+        .nth(Math.floor(Math.random() * (await options.count())))
         .click();
       await page.getByRole("button", { name: /continue/i }).click();
 
@@ -103,6 +119,10 @@ test.describe.serial("booking journey", () => {
       await page.getByLabel(/phone/i).fill("01712345678");
       await page.getByRole("button", { name: /confirm booking/i }).click();
 
+      // Fresh page ⇒ whatever becomes visible belongs to THIS attempt. The
+      // dialog only mounts after createAppointment settles (BookingForm sets
+      // confirmOpen post-mutation), so a visible dialog means the POST is
+      // done and "Done" is safe to click afterwards.
       await expect(dialog.or(conflict)).toBeVisible({ timeout: 20000 });
       booked = await dialog.isVisible();
     }

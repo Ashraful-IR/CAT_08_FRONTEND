@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { middleware } from "./middleware";
 
+const SESSION_COOKIE = "better-auth.session_token";
+
 function req(path, hasToken = false) {
   const url = `http://localhost:5002${path}`;
   return {
     url,
     nextUrl: new URL(url),
     cookies: {
-      get: (name) => (hasToken && name === "token" ? { value: "jwt.value" } : undefined),
+      get: (name) =>
+        hasToken && name === SESSION_COOKIE ? { value: "signed-in" } : undefined,
     },
   };
 }
@@ -15,6 +18,11 @@ function req(path, hasToken = false) {
 const locationOf = (response) => response.headers.get("location");
 
 describe("middleware route guard (SECURITY_AND_AUTH)", () => {
+  it("guards on the Better Auth session cookie", () => {
+    // Guardrail: the cookie the backend now sets must be the one we check.
+    expect(SESSION_COOKIE).toBe("better-auth.session_token");
+  });
+
   it.each(["/appointments", "/profile", "/appointments/123"])(
     "redirects unauthenticated users from %s to /login with a next param",
     (path) => {

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { server } from "@/mocks/node";
 import { BookingForm } from "./BookingForm";
 import { doctorFixtures } from "@/mocks/fixtures";
@@ -12,6 +12,16 @@ vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 const doctor = doctorFixtures[0];
 const SLOT = { date: "2026-09-30", time: "10:00 AM" };
+
+// The hardcoded slot must never age into the past (bookingSchema rejects
+// past dates): freeze "today" at the suite clock, like the sibling tests.
+beforeEach(() => {
+  vi.setSystemTime(new Date("2026-09-28T10:00:00"));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 function renderForm(props = {}) {
   const queryClient = new QueryClient({

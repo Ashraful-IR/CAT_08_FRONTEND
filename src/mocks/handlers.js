@@ -4,6 +4,7 @@ import {
   myAppointmentFixtures,
   publicAppointmentFixtures,
   reviewFixtures,
+  signInResponseFixture,
   topRatedFixtures,
 } from "./fixtures";
 
@@ -43,9 +44,44 @@ export const handlers = [
     HttpResponse.json(myAppointmentFixtures),
   ),
 
-  // Session: default signed-out so page tests are deterministic.
+  // Session: default signed-out so page tests are deterministic. Mirrors the
+  // backend's compat alias (live-verified): 401 {message:"No active session"}.
   // Sign-in flows override with 200 { user } via server.use(...).
   http.get("/api/auth/session", () =>
-    HttpResponse.json({ message: "Unauthorized" }, { status: 401 }),
+    HttpResponse.json({ message: "No active session" }, { status: 401 }),
   ),
+
+  // Better Auth (live-verified 2026-10-01): sign-up signs the user in (200
+  // {token,user}); a duplicate email is 422 with a Better Auth code.
+  http.post("/api/auth/sign-up/email", async ({ request }) => {
+    const { email } = await request.json();
+    if (email === "taken@example.com") {
+      return HttpResponse.json(
+        { message: "User already exists. Use another email.", code: "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" },
+        { status: 422 },
+      );
+    }
+    return HttpResponse.json(
+      {
+        token: "mock.better-auth.token",
+        user: { id: "u-new", name: "New User", email: "new@example.com", image: null },
+      },
+      { status: 200 },
+    );
+  }),
+
+  // Sign-in mirrors the live backend: 200 {token,user} on success, 401
+  // {message,code} on bad credentials.
+  http.post("/api/auth/sign-in/email", async ({ request }) => {
+    const { password } = await request.json();
+    if (password === "wrong") {
+      return HttpResponse.json(
+        { message: "Invalid email or password", code: "INVALID_EMAIL_OR_PASSWORD" },
+        { status: 401 },
+      );
+    }
+    return HttpResponse.json(signInResponseFixture);
+  }),
+
+  http.post("/api/auth/sign-out", () => HttpResponse.json({ success: true })),
 ];

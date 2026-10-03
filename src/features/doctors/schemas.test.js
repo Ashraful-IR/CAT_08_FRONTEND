@@ -1,5 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { bookingSchema } from "./schemas";
+
+// The hardcoded date must never age into the past (past-date refine).
+beforeEach(() => {
+  vi.setSystemTime(new Date("2026-09-28T10:00:00"));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 const validBase = {
   doctorId: "6a51ea90108e8a8b1caaf768",

@@ -17,10 +17,12 @@ import { registerSchema } from "../schemas";
 import { getErrorMessage } from "@/lib/api/errors";
 
 /**
- * Registration form per API_CONTRACT → Auth. All five fields are required
- * (including photoURL). Inputs are 48px high per the design system; errors
- * are announced via role="alert" (FieldError) and linked to inputs through
- * aria-describedby/aria-invalid.
+ * Registration form per API_CONTRACT → Auth (Better Auth). Photo URL is
+ * optional (mapped to the wire `image`); confirm-password is a client-side
+ * check stripped before sending; a 200 also signs the user in (useSignUp
+ * navigates straight to the `?next=` target). Inputs are 48px high per the
+ * design system; errors are announced via role="alert" (FieldError) and
+ * linked to inputs through aria-describedby/aria-invalid.
  */
 export function RegisterForm() {
   const form = useForm({
@@ -94,7 +96,7 @@ export function RegisterForm() {
         </Field>
 
         <Field data-invalid={errors.photoURL ? "true" : undefined}>
-          <FieldLabel htmlFor="register-photoURL">Photo URL</FieldLabel>
+          <FieldLabel htmlFor="register-photoURL">Photo URL (optional)</FieldLabel>
           <Input
             id="register-photoURL"
             type="url"
@@ -116,7 +118,7 @@ export function RegisterForm() {
             type="password"
             className="h-12"
             autoComplete="new-password"
-            placeholder="At least 6 characters, 1 uppercase + 1 lowercase"
+            placeholder="At least 6 characters"
             {...form.register("password")}
             {...inputAria("password")}
           />

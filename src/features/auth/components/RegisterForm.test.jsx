@@ -27,7 +27,7 @@ function renderForm() {
 const LABELS = {
   name: "Full name",
   email: "Email",
-  photoURL: "Photo URL",
+  photoURL: "Photo URL (optional)",
   password: "Password",
   confirm: "Confirm password",
 };
@@ -45,7 +45,9 @@ async function fillAndSubmit(overrides = {}) {
 
   await user.type(screen.getByLabelText(LABELS.name), values.name);
   await user.type(screen.getByLabelText(LABELS.email), values.email);
-  await user.type(screen.getByLabelText(LABELS.photoURL), values.photoURL);
+  if (values.photoURL !== undefined) {
+    await user.type(screen.getByLabelText(LABELS.photoURL), values.photoURL);
+  }
   await user.type(screen.getByLabelText(LABELS.password), values.password);
   await user.type(screen.getByLabelText(LABELS.confirm), values.confirm);
   await user.click(screen.getByRole("button", { name: /create account/i }));
@@ -62,8 +64,7 @@ describe("RegisterForm", () => {
     // match-refine only evaluates once the other fields pass (Zod semantics).
     expect(await screen.findByText(/name must be at least 2 characters/i)).toBeInTheDocument();
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
-    expect(screen.getByText(/enter a valid url/i)).toBeInTheDocument();
-    expect(screen.getByText(/password must be at least 6 characters/i)).toBeInTheDocument();
+    expect(screen.getByText(/at least 6 characters/i)).toBeInTheDocument();
     expect(screen.queryByText(/creating account/i)).not.toBeInTheDocument();
   });
 
@@ -76,7 +77,7 @@ describe("RegisterForm", () => {
     ).toBeInTheDocument();
   });
 
-  it("rejects an http:// photo URL (backend requires https)", async () => {
+  it("rejects an http:// photo URL (https-only photo rule)", async () => {
     renderForm();
     await fillAndSubmit({ photoURL: "http://i.ibb.co/me.jpg" });
 
@@ -85,11 +86,29 @@ describe("RegisterForm", () => {
     ).toBeInTheDocument();
   });
 
+  it("submits without a photo URL (Better Auth image is optional)", async () => {
+    let receivedBody = null;
+    server.use(
+      http.post("/api/auth/sign-up/email", async ({ request }) => {
+        receivedBody = await request.json();
+        return HttpResponse.json({ token: "t", user: { id: "u9" } }, { status: 200 });
+      }),
+    );
+
+    renderForm();
+    await fillAndSubmit({ photoURL: undefined });
+
+    await waitFor(() => expect(receivedBody).toBeTruthy());
+    expect(receivedBody).not.toHaveProperty("photoURL");
+    expect(receivedBody).not.toHaveProperty("confirmPassword");
+    expect(receivedBody).not.toHaveProperty("image");
+  });
+
   it("disables the submit button and shows a spinner while pending", async () => {
     server.use(
       http.post("/api/auth/sign-up/email", async () => {
         await new Promise((resolve) => setTimeout(resolve, 80));
-        return HttpResponse.json({ message: "Account created" }, { status: 201 });
+        return HttpResponse.json({ token: "t", user: { id: "u9" } }, { status: 200 });
       }),
     );
 
@@ -103,10 +122,10 @@ describe("RegisterForm", () => {
     expect(user).toBeDefined();
   });
 
-  it("on success toasts, redirects to /login, and does not sign the user in", async () => {
+  it("on success signs the user in (Better Auth sets the cookie), toasts, and navigates to next", async () => {
     server.use(
       http.post("/api/auth/sign-up/email", () =>
-        HttpResponse.json({ message: "Account created" }, { status: 201 }),
+        HttpResponse.json({ token: "t", user: { id: "u9" } }, { status: 200 }),
       ),
     );
 
@@ -114,20 +133,26 @@ describe("RegisterForm", () => {
     await fillAndSubmit();
 
     await waitFor(() => expect(toast.success).toHaveBeenCalled());
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/login"));
+    // No /login hop — the session cookie was set by the sign-up response.
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/"));
   });
 
-  it("maps the 400 'Email already registered' API error to a toast", async () => {
+  it("maps the 422 'email already registered' API error to a toast", async () => {
     server.use(
       http.post("/api/auth/sign-up/email", () =>
-        HttpResponse.json({ message: "Email already registered" }, { status: 400 }),
+        HttpResponse.json(
+          { message: "User already exists. Use another email.", code: "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" },
+          { status: 422 },
+        ),
       ),
     );
 
     renderForm();
     await fillAndSubmit({ email: "taken@example.com" });
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Email already registered"));
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith("User already exists. Use another email."),
+    );
     expect(replaceMock).not.toHaveBeenCalled();
   });
 });

@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/client";
-import { sessionResponseSchema } from "./schemas";
+import { sessionResponseSchema, signUpPayload } from "./schemas";
 
 /**
  * GET /auth/session. `skip401Hook` because a 401 here *is* the signed-out
@@ -15,11 +15,14 @@ export function signOut() {
 }
 
 /**
- * POST /auth/sign-up/email — creates the account; does NOT sign the user in
- * (API_CONTRACT: 201, user must sign in afterwards).
+ * POST /auth/sign-up/email (Better Auth). `values` are form values; the wire
+ * body is built by signUpPayload (strips confirmPassword, maps photoURL →
+ * image). A 200 also sets the session cookie — the user is signed in.
  */
 export function signUp(values) {
-  return api.post("/api/auth/sign-up/email", values, { skip401Hook: true });
+  return api.post("/api/auth/sign-up/email", signUpPayload(values), {
+    skip401Hook: true,
+  });
 }
 
 /** POST /auth/sign-in/email — bad credentials arrive as 401; hook must not fire. */

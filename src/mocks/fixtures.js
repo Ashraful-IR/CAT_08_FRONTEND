@@ -143,11 +143,18 @@ export const userFixture = {
   photoURL: "https://randomuser.me/api/portraits/men/32.jpg",
 };
 
-/** Response body of POST /auth/sign-in/email (token is ignored by the frontend). */
+/**
+ * Response body of POST /auth/sign-in/email (Better Auth: `{token,user}` with
+ * the avatar under `image`; the frontend ignores `token`).
+ */
 export const signInResponseFixture = {
-  message: "Sign-in successful",
-  token: "mock.jwt.token",
-  user: userFixture,
+  token: "mock.better-auth.token",
+  user: {
+    id: userFixture.id,
+    name: userFixture.name,
+    email: userFixture.email,
+    image: userFixture.photoURL,
+  },
 };
 
 /** Response body of GET /auth/session. */

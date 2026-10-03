@@ -9,21 +9,38 @@ const validRegister = {
   confirmPassword: "Secret1",
 };
 
-describe("registerSchema (mirrors API_CONTRACT → Auth)", () => {
+describe("registerSchema (mirrors API_CONTRACT → Auth, Better Auth)", () => {
   it("accepts a fully valid payload", () => {
     expect(registerSchema.safeParse(validRegister).success).toBe(true);
+  });
+
+  it("accepts a 6-char password with no uppercase/lowercase requirement", () => {
+    // Better Auth minPasswordLength: 6 — digits-only and all-lowercase pass.
+    expect(registerSchema.safeParse({ ...validRegister, password: "123456", confirmPassword: "123456" }).success).toBe(true);
+    expect(registerSchema.safeParse({ ...validRegister, password: "abcdef", confirmPassword: "abcdef" }).success).toBe(true);
+  });
+
+  it("rejects passwords under 6 characters", () => {
+    expect(registerSchema.safeParse({ ...validRegister, password: "sE1", confirmPassword: "sE1" }).success).toBe(false);
+    expect(registerSchema.safeParse({ ...validRegister, password: "abc12", confirmPassword: "abc12" }).success).toBe(false);
+  });
+
+  it("makes photoURL optional (Better Auth image is optional) but still validates https when present", () => {
+    const { photoURL: _omitted, ...noPhoto } = validRegister;
+    expect(registerSchema.safeParse(noPhoto).success).toBe(true);
+    expect(registerSchema.safeParse({ ...validRegister, photoURL: "" }).success).toBe(true);
+    expect(registerSchema.safeParse({ ...validRegister, photoURL: "http://i.ibb.co/me.jpg" }).success).toBe(false);
+    expect(registerSchema.safeParse({ ...validRegister, photoURL: "not-a-url" }).success).toBe(false);
+  });
+
+  it("rejects mismatched confirmPassword (client-side UX check, stripped before sending)", () => {
+    expect(registerSchema.safeParse({ ...validRegister, confirmPassword: "Secret2" }).success).toBe(false);
   });
 
   it.each([
     ["missing name", { name: "" }],
     ["short name", { name: "R" }],
     ["invalid email", { email: "not-an-email" }],
-    ["http photoURL", { photoURL: "http://i.ibb.co/me.jpg" }],
-    ["photoURL without protocol", { photoURL: "i.ibb.co/me.jpg" }],
-    ["password without uppercase", { password: "secret1", confirmPassword: "secret1" }],
-    ["password without lowercase", { password: "SECRET1", confirmPassword: "SECRET1" }],
-    ["password under 6 chars", { password: "sE1", confirmPassword: "sE1" }],
-    ["mismatched confirm", { confirmPassword: "Secret2" }],
   ])("rejects %s", (_label, patch) => {
     expect(registerSchema.safeParse({ ...validRegister, ...patch }).success).toBe(false);
   });

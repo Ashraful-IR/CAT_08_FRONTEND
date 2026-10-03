@@ -45,7 +45,7 @@ describe("useSession", () => {
 describe("useSignOut", () => {
   it("calls the endpoint, clears the session cache, and redirects home", async () => {
     server.use(
-      http.post("/api/auth/sign-out", () => HttpResponse.json({ message: "Signed out" })),
+      http.post("/api/auth/sign-out", () => HttpResponse.json({ success: true })),
     );
 
     const { queryClient, wrapper } = createWrapper();
@@ -62,42 +62,54 @@ describe("useSignOut", () => {
 });
 
 describe("useSignUp", () => {
-  it("POSTs the payload, redirects to /login, and does not sign the user in", async () => {
+  it("POSTs the Better Auth payload without confirmPassword, invalidates the session, and lands on the next target (sign-up signs in)", async () => {
     let receivedBody = null;
     server.use(
       http.post("/api/auth/sign-up/email", async ({ request }) => {
         receivedBody = await request.json();
         return HttpResponse.json(
-          { message: "Account created", user: { id: "u9" } },
-          { status: 201 },
+          { token: "tok", user: { id: "u9", name: "Rifat Hossain", email: "rifat@example.com", image: "https://i.ibb.co/me.jpg" } },
+          { status: 200 },
         );
       }),
     );
 
-    const { wrapper } = createWrapper();
+    const { queryClient, wrapper } = createWrapper();
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
     const { result } = renderHook(() => useSignUp(), { wrapper });
 
-    const values = {
-      name: "Rifat Hossain",
-      email: "rifat@example.com",
-      photoURL: "https://i.ibb.co/me.jpg",
-      password: "Secret1",
-      confirmPassword: "Secret1",
-    };
-
-    await act(async () => result.current.mutate(values));
+    await act(async () =>
+      result.current.mutate({
+        name: "Rifat Hossain",
+        email: "rifat@example.com",
+        photoURL: "https://i.ibb.co/me.jpg",
+        password: "Secret1",
+        confirmPassword: "Secret1",
+      }),
+    );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(receivedBody).toEqual(values);
-    // Sign-up must NOT log the user in, and the return target survives the
-    // register→login hop (task 3.4: book → register → login → back to book).
-    expect(replaceMock).toHaveBeenCalledWith("/login?next=%2Fdoctors%2Fabc");
+    // confirmPassword is client-side only; photoURL maps to the wire `image`.
+    expect(receivedBody).toEqual({
+      name: "Rifat Hossain",
+      email: "rifat@example.com",
+      image: "https://i.ibb.co/me.jpg",
+      password: "Secret1",
+    });
+    // Better Auth sets the cookie on sign-up — the session cache is refreshed.
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["session"] });
+    // No /login hop: the user is already signed in (task 3.4 chain preserved —
+    // the return target survives the whole register flow).
+    expect(replaceMock).toHaveBeenCalledWith("/doctors/abc");
   });
 
-  it("surfaces the backend message on 400 (e.g. email already registered)", async () => {
+  it("surfaces the backend message on 422 (email already registered)", async () => {
     server.use(
       http.post("/api/auth/sign-up/email", () =>
-        HttpResponse.json({ message: "Email already registered" }, { status: 400 }),
+        HttpResponse.json(
+          { message: "User already exists. Use another email.", code: "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" },
+          { status: 422 },
+        ),
       ),
     );
 
@@ -107,14 +119,12 @@ describe("useSignUp", () => {
       result.current.mutate({
         name: "R H",
         email: "taken@example.com",
-        photoURL: "https://i.ibb.co/me.jpg",
         password: "Secret1",
-        confirmPassword: "Secret1",
       }),
     );
 
     await waitFor(() => expect(result.current.isError).toBe(true));
-    expect(result.current.error.message).toBe("Email already registered");
+    expect(result.current.error.message).toBe("User already exists. Use another email.");
   });
 });
 
@@ -122,7 +132,10 @@ describe("useSignIn", () => {
   it("POSTs credentials and invalidates the session cache on success", async () => {
     server.use(
       http.post("/api/auth/sign-in/email", () =>
-        HttpResponse.json({ message: "ok", token: "ignored", user: sessionResponseFixture.user }),
+        HttpResponse.json({
+          token: "ignored",
+          user: { id: "u1", name: "R", email: "a@b.com", image: "https://x/y.png" },
+        }),
       ),
     );
 

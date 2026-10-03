@@ -50,28 +50,27 @@ export function useSignOut() {
 }
 
 /**
- * POST /auth/sign-up/email. On 201 the user is NOT signed in — they are sent
- * to /login with a success toast (SECURITY_AND_AUTH → Session model). A
- * `?next=` target survives the register→login hop (task 3.4: a first-time
- * visitor coming from the booking gate still lands back on the doctor
- * profile after signing in); validated via safeNextPath.
+ * POST /auth/sign-up/email (Better Auth: 200 + sets the session cookie —
+ * **the user is signed in immediately**). On success the ['session'] cache is
+ * invalidated and the user lands on the validated `?next=` target — the
+ * register→login hop from task 3.4 no longer applies, but the return target
+ * still survives the whole flow via safeNextPath. Duplicate email arrives as
+ * 422 `{message:"User already exists…"}`; components render it via
+ * mutation.error and getErrorMessage().
  */
 export function useSignUp() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   return useMutation({
     mutationFn: signUp,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["session"] });
       toast.success("Account created", {
-        description: "Sign in with your new credentials to continue.",
+        description: "You are signed in and ready to go.",
       });
-      const next = safeNextPath(searchParams.get("next"));
-      router.replace(next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`);
-    },
-    onError: () => {
-      // The API client already normalised this to a user-presentable message;
-      // components render it via mutation.error and getErrorMessage().
+      router.replace(safeNextPath(searchParams.get("next")));
     },
   });
 }
